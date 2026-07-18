@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎨 我的作品</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Noto+Sans+SC:wght@300;400;500;700;900&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+<style>
+:root{--font-body:'Nunito','Noto Sans SC',-apple-system,sans-serif;--font-display:'ZCOOL KuaiLe','Noto Sans SC',cursive;--primary:#e879b0;--primary-light:#f5a8d0;--primary-bg:rgba(232,121,176,.1);--gradient:linear-gradient(135deg,#e879b0,#c084fc);--glow:rgba(232,121,176,.3);--bg:#0a0a0f;--bg-card:rgba(255,255,255,.04);--bg-nav:rgba(10,10,15,.7);--text:#f0eef5;--text-secondary:#a8a0b8;--text-tertiary:#6b6380;--border:rgba(255,255,255,.06);--shadow:0 4px 30px rgba(0,0,0,.4);--shadow-hover:0 12px 50px rgba(232,121,176,.15);--ease-out-expo:cubic-bezier(.16,1,.3,1);--ease-spring:cubic-bezier(.175,.885,.32,1.275)}
+[data-theme="light"]{--bg:#fef6ff;--bg-card:rgba(255,255,255,.72);--bg-nav:rgba(254,246,255,.75);--text:#2d2b3e;--text-secondary:#8b7fa8;--text-tertiary:#b8aed0;--border:rgba(180,130,200,.12);--shadow:0 4px 24px rgba(180,130,200,.12);--shadow-hover:0 12px 50px rgba(232,121,176,.18)}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);line-height:1.7;transition:background .6s,color .6s;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:var(--primary);text-decoration:none;transition:all .3s var(--ease-out-expo)}a:hover{color:var(--primary-light)}::selection{background:var(--primary);color:#fff}
+
+.loading{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .8s var(--ease-out-expo),visibility .8s}.loading.done{opacity:0;visibility:hidden;pointer-events:none}.loading-ring{width:56px;height:56px;border:2px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin 1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.loading span{margin-top:16px;font-family:var(--font-display);color:var(--text-secondary);font-size:.88rem}
+
+.cursor-dot,.cursor-ring{position:fixed;pointer-events:none;z-index:9998;border-radius:50%}.cursor-dot{width:8px;height:8px;background:var(--primary);transform:translate(-50%,-50%)}.cursor-ring{width:40px;height:40px;border:1.5px solid var(--primary);transform:translate(-50%,-50%);opacity:.5;transition:width .4s var(--ease-spring),height .4s var(--ease-spring)}.cursor-ring.hover{width:60px;height:60px;border-color:var(--primary-light);background:var(--primary-bg)}
+
+.particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}.particle{position:absolute;border-radius:50%;opacity:0;animation:floatUp linear infinite}@keyframes floatUp{0%{transform:translateY(100vh) scale(0);opacity:0}10%{opacity:.5}90%{opacity:.5}100%{transform:translateY(-10vh) scale(1);opacity:0}}
+
+.navbar{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,15,.45);backdrop-filter:blur(30px) saturate(1.8);-webkit-backdrop-filter:blur(30px) saturate(1.8);border-bottom:1px solid rgba(255,255,255,.06);transition:transform .5s var(--ease-out-expo)}.navbar.hide{transform:translateY(-100%)}
+[data-theme="light"] .navbar{background:rgba(254,246,255,.5);border-color:rgba(180,130,200,.1)}.navbar-inner{max-width:1200px;margin:0 auto;padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:64px}.logo{font-family:var(--font-display);font-size:1.25rem;color:var(--text);display:flex;align-items:center;gap:8px;transition:all .3s var(--ease-spring)}.logo:hover{color:var(--primary);transform:scale(1.04) rotate(-1deg)}.nav-links{display:flex;align-items:center;gap:6px;list-style:none}.nav-links a{color:var(--text-secondary);font-size:.82rem;font-weight:600;padding:8px 16px;border-radius:100px;transition:all .35s var(--ease-spring)}.nav-links a:hover,.nav-links a.active{background:var(--primary-bg);color:var(--primary)}.nav-actions{display:flex;align-items:center;gap:8px}.hamburger{display:none;cursor:pointer;font-size:1.3rem;color:var(--text-secondary);background:none;border:none;transition:color .3s,transform .3s var(--ease-spring)}.hamburger:hover{color:var(--primary);transform:rotate(90deg)}.theme-btn{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--bg-card);color:var(--text-secondary);cursor:pointer;display:grid;place-items:center;font-size:.9rem;transition:all .35s var(--ease-spring)}.theme-btn:hover{background:var(--primary-bg);color:var(--primary);border-color:var(--primary);transform:scale(1.1) rotate(20deg)}
+
+.hero{position:relative;min-height:50vh;display:flex;align-items:center;justify-content:center;overflow:hidden}.hero-bg{position:absolute;inset:0;background:url('images/ec43126fgy1hr7uv9ftwoj242o2u8b2e.jpg') center/cover no-repeat;transform:scale(1.15)}.hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,10,15,.5) 0%,rgba(10,10,15,.75) 50%,var(--bg) 100%)}[data-theme="light"] .hero-bg::after{background:linear-gradient(180deg,rgba(254,246,255,.3) 0%,rgba(254,246,255,.6) 50%,var(--bg) 100%)}.hero-content{position:relative;z-index:2;text-align:center;padding:0 24px}.hero-content .tag{display:inline-block;font-size:.75rem;font-weight:700;color:var(--primary);letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;padding:6px 16px;border-radius:100px;background:var(--primary-bg);backdrop-filter:blur(8px)}.hero h1{font-family:var(--font-display);font-size:clamp(2rem,5vw,3.5rem);font-weight:900;line-height:1.2;margin-bottom:12px;color:#fff}[data-theme="light"] .hero h1{color:var(--text)}.hero h1 .accent{background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;background-size:200% 200%;animation:gradShift 4s ease infinite}@keyframes gradShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}.hero p{font-size:1rem;color:rgba(255,255,255,.7);max-width:500px;margin:0 auto}[data-theme="light"] .hero p{color:var(--text-secondary)}
+
+main{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:60px 32px 80px}
+
+.proj-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(480px,1fr));gap:24px}
+.proj-card{position:relative;border-radius:24px;overflow:hidden;height:400px;cursor:pointer;transition:all .6s var(--ease-spring)}.proj-card:hover{transform:translateY(-10px) scale(1.02)}
+.proj-card .bg{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform .8s var(--ease-out-expo)}.proj-card:hover .bg{transform:scale(1.12)}
+.proj-card::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 25%,rgba(10,10,15,.85) 100%)}[data-theme="light"] .proj-card::after{background:linear-gradient(180deg,transparent 25%,rgba(254,246,255,.88) 100%)}
+.proj-info{position:absolute;bottom:0;left:0;right:0;padding:28px;z-index:2}
+.proj-info .emoji{font-size:2.2rem;display:block;margin-bottom:10px;transition:transform .5s var(--ease-spring)}.proj-card:hover .emoji{transform:rotate(12deg) scale(1.25) translateY(-4px)}
+.proj-info h3{font-size:1.2rem;font-weight:700;color:#fff;margin-bottom:6px}[data-theme="light"] .proj-info h3{color:var(--text)}
+.proj-info p{font-size:.85rem;color:rgba(255,255,255,.7);line-height:1.6}[data-theme="light"] .proj-info p{color:var(--text-secondary)}
+.proj-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}.proj-tag{font-size:.65rem;font-weight:600;color:var(--primary);padding:3px 10px;border-radius:100px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);backdrop-filter:blur(6px)}[data-theme="light"] .proj-tag{border-color:var(--border);background:rgba(255,255,255,.4)}
+.proj-btn{display:inline-flex;align-items:center;gap:6px;margin-top:14px;padding:9px 22px;border-radius:100px;background:var(--gradient);color:#fff;font-size:.82rem;font-weight:700;transition:all .4s var(--ease-spring);opacity:0;transform:translateY(12px)}.proj-card:hover .proj-btn{opacity:1;transform:translateY(0)}.proj-btn:hover{transform:scale(1.06)!important;color:#fff;box-shadow:0 6px 24px var(--glow)}
+.proj-btn-static{display:inline-flex;align-items:center;gap:6px;padding:10px 24px;border-radius:100px;background:var(--gradient);color:#fff;font-size:.85rem;font-weight:700;transition:all .4s var(--ease-spring);box-shadow:0 4px 20px var(--glow)}.proj-btn-static:hover{transform:translateY(-3px) scale(1.05);color:#fff;box-shadow:0 8px 32px var(--glow)}
+
+.back-link{display:inline-flex;align-items:center;gap:8px;margin-top:40px;padding:10px 24px;border-radius:100px;border:1px solid var(--border);color:var(--text-secondary);font-size:.85rem;font-weight:600;text-decoration:none;transition:all .4s var(--ease-spring);backdrop-filter:blur(8px)}.back-link:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-bg);transform:translateX(-4px)}
+
+.footer{position:relative;border-top:1px solid var(--border);padding:32px;text-align:center;background:var(--bg);z-index:1}.footer p{font-size:.82rem;color:var(--text-tertiary)}
+.btt{position:fixed;bottom:32px;right:32px;z-index:100;width:46px;height:46px;border-radius:50%;border:none;background:var(--gradient);color:#fff;font-size:1rem;cursor:pointer;display:grid;place-items:center;opacity:0;visibility:hidden;transform:translateY(24px);transition:all .45s var(--ease-spring);box-shadow:0 6px 24px var(--glow)}.btt.show{opacity:1;visibility:visible;transform:translateY(0)}.btt:hover{transform:translateY(-5px) scale(1.1)}
+
+[data-anim]{opacity:0;transition:opacity .9s var(--ease-out-expo),transform .9s var(--ease-out-expo)}[data-anim="fade-up"]{transform:translateY(60px)}[data-anim="fade-left"]{transform:translateX(-60px)}[data-anim="fade-right"]{transform:translateX(60px)}[data-anim="scale"]{transform:scale(.85)}[data-anim].in{opacity:1;transform:none}[data-delay]{transition-delay:calc(var(--d,0) * 120ms)}
+
+@media(max-width:900px){.proj-grid{grid-template-columns:1fr}}
+@media(max-width:768px){.navbar-inner{padding:0 16px;height:56px}.nav-links{position:fixed;top:56px;left:0;right:0;background:var(--bg-nav);backdrop-filter:blur(30px);display:flex;flex-direction:column;padding:12px 16px;gap:4px;border-bottom:1px solid var(--border);opacity:0;visibility:hidden;transform:translateY(-12px);transition:all .4s var(--ease-out-expo)}.nav-links.open{opacity:1;visibility:visible;transform:translateY(0)}.nav-links a{padding:10px 14px;font-size:.88rem}.hamburger{display:block}main{padding:40px 16px 60px}.proj-card{height:340px}.cursor-dot,.cursor-ring{display:none!important}}
+</style>
+</head>
+<body>
+<div class="loading" id="loading"><div class="loading-ring"></div><span>✨ 加载中...</span></div>
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="particles" id="particles"></div>
+<button class="btt" id="btt"><i class="fas fa-arrow-up"></i></button>
+
+<nav class="navbar" id="navbar">
+  <div class="navbar-inner">
+    <a href="/" class="logo">✨ buling</a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/">首页</a></li>
+      <li><a href="/#about">关于</a></li>
+      <li><a href="/works.html" class="active">作品</a></li>
+      <li><a href="/project/">项目中心</a></li>
+      <li><a href="/gallery.html">画廊</a></li>
+      <li><a href="/#social">社交</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="hamburger" id="hamburger"><i class="fas fa-bars"></i></button>
+      <button class="theme-btn" id="themeToggle"><i class="fas fa-moon"></i></button>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="tag" data-anim="fade-up" data-delay style="--d:0">PORTFOLIO</div>
+    <h1 data-anim="fade-up" data-delay style="--d:1">我的 <span class="accent">作品</span></h1>
+    <p data-anim="fade-up" data-delay style="--d:2">用心制作的每一个项目</p>
+  </div>
+</section>
+
+<main>
+  <div class="proj-grid">
+    <div class="proj-card" data-anim="fade-left" data-delay style="--d:3">
+      <div class="bg" style="background-image:url('images/ec43126fgy1icfw1cfwzxj24g02i07wl.jpg')"></div>
+      <div class="proj-info">
+        <span class="emoji">🌸</span>
+        <h3>年度男娘程度总结器</h3>
+        <p>输入你的昵称，测测你的男娘指数！基于哈希算法的趣味测试，相同昵称会得到相同结果。</p>
+        <div class="proj-tags"><span class="proj-tag">趣味测试</span><span class="proj-tag">JavaScript</span></div>
+        <a href="/project/femboy.html" class="proj-btn">去试试 <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </div>
+    <div class="proj-card" data-anim="fade-right" data-delay style="--d:4">
+      <div class="bg" style="background-image:url('images/ec43126fgy1iau6qji0vqj23uw265x6s.jpg')"></div>
+      <div class="proj-info">
+        <span class="emoji">🤖</span>
+        <h3>AI贴吧老哥</h3>
+        <p>用AI模仿贴吧老哥的语气和你聊天，支持典孝急绷麻等多种回复风格。</p>
+        <div class="proj-tags"><span class="proj-tag">AI聊天</span><span class="proj-tag">贴吧文化</span></div>
+        <a href="/project/ai.html" class="proj-btn">去聊聊 <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:48px" data-anim="fade-up" data-delay style="--d:5">
+    <a href="/project/" class="proj-btn-static">项目中心 <i class="fas fa-arrow-right"></i></a>
+  </div>
+  <div style="text-align:center" data-anim="fade-up" data-delay style="--d:6"><a href="/" class="back-link"><i class="fas fa-arrow-left"></i> 返回首页</a></div>
+</main>
+
+<footer class="footer"><p>© 2025 buling 的个人小窝 ✨ 保留所有权利</p></footer>
+
+<script>
+(function(){
+  const $=s=>document.querySelector(s),$$=s=>document.querySelectorAll(s);
+  window.addEventListener('load',()=>setTimeout(()=>$('#loading').classList.add('done'),500));
+  const themeToggle=$('#themeToggle'),themeIcon=themeToggle.querySelector('i');
+  function setTheme(t){document.documentElement.setAttribute('data-theme',t);localStorage.setItem('blog-theme',t);themeIcon.className=t==='dark'?'fas fa-moon':'fas fa-sun'}
+  setTheme(localStorage.getItem('blog-theme')||'dark');
+  themeToggle.addEventListener('click',()=>setTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark'));
+  const hamburger=$('#hamburger'),navLinks=$('#navLinks');
+  hamburger.addEventListener('click',()=>{navLinks.classList.toggle('open');hamburger.innerHTML=navLinks.classList.contains('open')?'<i class="fas fa-times"></i>':'<i class="fas fa-bars"></i>'});
+  navLinks.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{navLinks.classList.remove('open');hamburger.innerHTML='<i class="fas fa-bars"></i>'}));
+  const navbar=$('#navbar');let lastY=0;
+  window.addEventListener('scroll',()=>{const y=window.scrollY;navbar.classList.toggle('hide',y>lastY&&y>80);lastY=y},{passive:true});
+  const btt=$('#btt');
+  window.addEventListener('scroll',()=>btt.classList.toggle('show',window.scrollY>500),{passive:true});
+  btt.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+  const dot=$('#cursorDot'),ring=$('#cursorRing');let mx=0,my=0,rx=0,ry=0;
+  if(!matchMedia('(pointer:coarse)').matches){
+    document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px'});
+    !function a(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(a)}();
+    $$('a,.proj-card,.theme-btn,.hamburger').forEach(el=>{el.addEventListener('mouseenter',()=>ring.classList.add('hover'));el.addEventListener('mouseleave',()=>ring.classList.remove('hover'))});
+  }
+  const animObs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');animObs.unobserve(e.target)}}),{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+  $$('[data-anim]').forEach(el=>animObs.observe(el));
+  const pColors=['#e879b0','#c084fc','#f5a8d0','#60a5fa','#fbbf24','#6ee7b7'];
+  for(let i=0;i<12;i++){const p=document.createElement('div');p.className='particle';const sz=Math.random()*4+2;p.style.cssText='width:'+sz+'px;height:'+sz+'px;left:'+Math.random()*100+'vw;background:'+pColors[~~(Math.random()*pColors.length)]+';animation-duration:'+(Math.random()*14+10)+'s;animation-delay:'+(Math.random()*12)+'s';$('#particles').appendChild(p)}
+})();
+</script>
+</body>
+</html>
