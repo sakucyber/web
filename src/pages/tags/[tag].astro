@@ -1,0 +1,111 @@
+---
+/**
+ * 单个标签页：/tags/<tag>
+ * 每个标签一页，构建期从 getTags 生成；文章列表复用 PostCard 网格。
+ * 标签值保持原文（中文不转 slug），路由输出 dist/tags/<标签>/index.html，
+ * 站内链接由 getTagHref 统一做 encodeURIComponent。
+ */
+import type { Post } from '@/lib/content';
+import { getPosts, getTags, getTagHref } from '@/lib/content';
+import { formatDate } from '@/lib/format';
+import { HERO_IMAGES } from '@/lib/images';
+import PageLayout from '@/layouts/PageLayout.astro';
+import PostCard from '@/components/PostCard.astro';
+import Icon from '@/components/Icon.astro';
+
+interface Props {
+  tag: string;
+  count: number;
+  posts: Post[];
+}
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  const tags = getTags(posts);
+
+  return tags.map(({ tag, count }) => ({
+    params: { tag },
+    props: {
+      tag,
+      count,
+      posts: posts.filter((post) => post.data.tags.includes(tag)),
+    },
+  }));
+}
+
+const { tag, count, posts } = Astro.props;
+const allPosts = await getPosts();
+const latest = posts.length > 0 ? posts[0] : undefined;
+const otherTags = getTags(allPosts).filter((item) => item.tag !== tag);
+const description = `标签「${tag}」下的 ${count} 篇文章${latest ? `，最近更新于 ${formatDate(latest.data.date)}` : ''}。`;
+---
+
+<PageLayout
+  title={`标签：${tag}`}
+  description={description}
+  eyebrow="TAG"
+  heading="标签"
+  accent={tag}
+  subtitle={`共 ${count} 篇文章`}
+  image={HERO_IMAGES.posts}
+  bodyClass="page-tag"
+>
+  <div class="tag-head">
+    <a class="back-link" href="/tags"><Icon name="arrow-left" size={14} /> 全部标签</a>
+    <div class="tag-cloud tag-head__related">
+      {
+        otherTags.slice(0, 6).map(({ tag: otherTag, count: otherCount }) => (
+          <a href={getTagHref(otherTag)}>
+            #{otherTag} <small>{otherCount}</small>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+
+  {
+    posts.length > 0 ? (
+      <div class="post-grid" data-anim="fade-up">
+        {posts.map((post) => (
+          <PostCard post={post} />
+        ))}
+      </div>
+    ) : (
+      <div class="empty-state">
+        <div class="empty-state__icon">🏷️</div>
+        <p>这个标签下暂时还没有文章。</p>
+      </div>
+    )
+  }
+
+  <div class="tag-foot">
+    <a class="back-link" href="/tags"><Icon name="tag" size={14} /> 全部标签</a>
+    <a class="back-link" href="/posts"><Icon name="arrow-left" size={14} /> 全部文章</a>
+  </div>
+</PageLayout>
+
+<style>
+  .tag-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 30px;
+  }
+
+  .tag-head__related {
+    gap: 8px;
+  }
+
+  .tag-head__related a {
+    padding: 6px 14px;
+    font-size: 0.78rem;
+  }
+
+  .tag-foot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 44px;
+  }
+</style>

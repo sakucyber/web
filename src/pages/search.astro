@@ -1,0 +1,137 @@
+---
+/**
+ * 搜索页：/search
+ * ----------------------------------------------------------------
+ * 页面本身只提供表单与容器，匹配逻辑全部在 src/scripts/search.ts；
+ * 索引来自构建期端点 /search-index.json（标题 + 摘要 + 标签，不含正文）。
+ * 搜索页属于工具页，加 noindex，避免被搜索引擎收录成薄内容。
+ */
+import { getPosts, getTags, getTagHref } from '@/lib/content';
+import { HERO_IMAGES } from '@/lib/images';
+import PageLayout from '@/layouts/PageLayout.astro';
+import Icon from '@/components/Icon.astro';
+
+const posts = await getPosts();
+const hotTags = getTags(posts).slice(0, 6);
+const description = '搜索 buling 博客的文章、作品与页面：支持标题、摘要、标签与分类关键词。';
+---
+
+<PageLayout
+  title="搜索"
+  description={description}
+  eyebrow="SEARCH"
+  heading="全站"
+  accent="搜索"
+  subtitle="输入关键词，找到文章、作品与页面"
+  image={HERO_IMAGES.posts}
+  narrow
+  noindex
+  bodyClass="page-search"
+>
+  <form
+    class="search-form search-form--page"
+    role="search"
+    action="/search"
+    method="get"
+    data-search-form
+  >
+    <label class="visually-hidden" for="searchInput">搜索关键词</label>
+    <input
+      id="searchInput"
+      class="search-input"
+      type="search"
+      name="q"
+      placeholder="搜索文章、作品或标签…"
+      autocomplete="off"
+      spellcheck="false"
+      autofocus
+      aria-controls="searchResults"
+      aria-describedby="searchStatus"
+    />
+    <button class="search-submit" type="submit" aria-label="搜索">
+      <Icon name="search" size={18} />
+    </button>
+  </form>
+
+  <p class="search-status" id="searchStatus" data-search-status role="status" aria-live="polite">
+    输入关键词开始搜索
+  </p>
+
+  <div class="search-results" id="searchResults" data-search-results></div>
+
+  <div class="search-hints" data-search-hints>
+    {
+      hotTags.length > 0 && (
+        <>
+          <p class="search-hints__title">热门标签</p>
+          <div class="chip-row">
+            {hotTags.map(({ tag, count }) => (
+              <a class="pill" href={getTagHref(tag)} aria-label={`标签 ${tag}，共 ${count} 篇文章`}>
+                #{tag}
+              </a>
+            ))}
+          </div>
+        </>
+      )
+    }
+    <div class="search-hints__links">
+      <a href="/posts">全部文章</a>
+      <span aria-hidden="true">·</span>
+      <a href="/works">全部作品</a>
+      <span aria-hidden="true">·</span>
+      <a href="/tags">全部标签</a>
+    </div>
+  </div>
+</PageLayout>
+
+<script>
+  import '@/scripts/search';
+</script>
+
+<style>
+  .search-form--page .search-input {
+    padding-block: 14px;
+  }
+
+  .search-results:empty {
+    margin-top: 0;
+  }
+
+  .search-empty p {
+    font-size: 0.85rem;
+    line-height: 1.8;
+    max-width: 420px;
+    margin: 0 auto;
+  }
+
+  .search-hints {
+    margin-top: 44px;
+    padding-top: 26px;
+    border-top: 1px dashed var(--border);
+    text-align: center;
+  }
+
+  .search-hints__title {
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin-bottom: 14px;
+  }
+
+  .search-hints__links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 22px;
+    font-size: 0.82rem;
+    color: var(--text-tertiary);
+  }
+
+  .search-hints__links a {
+    font-weight: 700;
+  }
+</style>

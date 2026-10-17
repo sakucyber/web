@@ -1,0 +1,400 @@
+---
+/**
+ * 项目页：年度男娘程度总结器
+ * ----------------------------------------------------------------
+ * ProjectLayout 负责头图 / 标题 / 作品 meta（noindex 来自 works frontmatter），
+ * Markdown 介绍来自 src/content/works/femboy-meter.md。
+ * 测试工具与六色主题切换嵌在正文区，逻辑在 src/scripts/femboy.ts。
+ */
+import ProjectLayout from '@/layouts/ProjectLayout.astro';
+import Icon from '@/components/Icon.astro';
+import { getWorkByHref } from '@/lib/content';
+
+const work = await getWorkByHref('/project/femboy');
+if (!work) {
+  throw new Error('缺少作品元数据：src/content/works/femboy-meter.md 的 href 应为 /project/femboy');
+}
+
+const postHref = '/posts/2026-09-15-femboy-meter';
+const THEME_COLORS = [
+  { key: 'sakura', label: '樱花粉', dot: '#e879b0' },
+  { key: 'azur', label: '天空蓝', dot: '#60a5fa' },
+  { key: 'wisteria', label: '紫藤', dot: '#a78bfa' },
+  { key: 'matcha', label: '抹茶', dot: '#6ee7b7' },
+  { key: 'yuzu', label: '柚子', dot: '#fbbf24' },
+  { key: 'sumi', label: '墨染', dot: '#f472b6' },
+];
+---
+
+<ProjectLayout work={work}>
+  <Fragment slot="actions">
+    <a class="btn" href="#test">✨ 开始测试</a>
+  </Fragment>
+
+  <section class="meter-section" id="test" aria-labelledby="meter-heading">
+    <div class="meter-card" data-femboy-card data-color="sakura">
+      <header class="meter-head">
+        <h2 id="meter-heading">🌸 年度男娘程度总结器</h2>
+        <p>输入你的昵称，测测你的男娘指数吧！</p>
+      </header>
+
+      <form class="meter-form" data-meter-form novalidate>
+        <label class="meter-label" for="meter-nickname">你的昵称</label>
+        <div class="meter-row">
+          <input
+            id="meter-nickname"
+            data-meter-nickname
+            type="text"
+            placeholder="请输入你的昵称"
+            autocomplete="off"
+            enterkeyhint="go"
+            maxlength="40"
+          />
+          <button class="btn meter-btn" type="submit">✨ 开始测试</button>
+        </div>
+        <p class="meter-error" data-meter-error role="status" aria-live="polite" hidden></p>
+        <p class="meter-tip">💡 相同的昵称会得到相同的结果哦</p>
+      </form>
+
+      <div class="meter-result" data-meter-result role="status" aria-live="polite" hidden>
+        <h3>📝 专属男娘程度报告</h3>
+        <p>昵称：<span data-meter-nickname-out></span></p>
+        <p class="meter-score-line">
+          男娘指数：<strong data-meter-score></strong><span class="meter-unit">分</span>
+        </p>
+        <p class="meter-comment" data-meter-comment></p>
+      </div>
+
+      <div class="meter-colors">
+        <span class="meter-colors__label">🎨 主题色</span>
+        <div class="meter-colors__row" role="group" aria-label="主题色">
+          {
+            THEME_COLORS.map((option) => (
+              <button
+                type="button"
+                class="color-dot"
+                data-color-option={option.key}
+                style={`--dot:${option.dot}`}
+                aria-label={option.label}
+                title={option.label}
+                aria-pressed={option.key === 'sakura' ? 'true' : 'false'}
+              />
+            ))
+          }
+        </div>
+      </div>
+    </div>
+
+    <p class="meter-footnote">分数与评语纯属娱乐 · 昵称只在本地参与计算，不会发到任何服务器</p>
+    <div class="meter-links">
+      <a class="back-link" href={postHref}>
+        了解 DJB2 与 sin 伪随机 <Icon name="arrow-right" size={14} />
+      </a>
+    </div>
+  </section>
+</ProjectLayout>
+
+<script>
+  import '@/scripts/femboy';
+</script>
+
+<style>
+  .meter-section {
+    max-width: 680px;
+    margin-inline: auto;
+  }
+
+  /* ---------------- 工具卡：配色由 data-color 切换 ---------------- */
+  .meter-card {
+    --meter-primary: #e879b0;
+    --meter-soft: rgba(232, 121, 176, 0.12);
+    --meter-gradient: linear-gradient(135deg, #e879b0, #c084fc);
+    --meter-glow: rgba(232, 121, 176, 0.35);
+
+    padding: clamp(24px, 5vw, 36px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background:
+      radial-gradient(circle at 50% 0%, var(--meter-soft), transparent 58%), var(--bg-card);
+    box-shadow: var(--shadow);
+    text-align: center;
+  }
+
+  .meter-card[data-color='sakura'] {
+    --meter-primary: #e879b0;
+    --meter-soft: rgba(232, 121, 176, 0.12);
+    --meter-gradient: linear-gradient(135deg, #e879b0, #c084fc);
+    --meter-glow: rgba(232, 121, 176, 0.35);
+  }
+
+  .meter-card[data-color='azur'] {
+    --meter-primary: #60a5fa;
+    --meter-soft: rgba(96, 165, 250, 0.12);
+    --meter-gradient: linear-gradient(135deg, #60a5fa, #a78bfa);
+    --meter-glow: rgba(96, 165, 250, 0.35);
+  }
+
+  .meter-card[data-color='wisteria'] {
+    --meter-primary: #a78bfa;
+    --meter-soft: rgba(167, 139, 250, 0.12);
+    --meter-gradient: linear-gradient(135deg, #a78bfa, #e879b0);
+    --meter-glow: rgba(167, 139, 250, 0.35);
+  }
+
+  .meter-card[data-color='matcha'] {
+    --meter-primary: #6ee7b7;
+    --meter-soft: rgba(110, 231, 183, 0.12);
+    --meter-gradient: linear-gradient(135deg, #6ee7b7, #60a5fa);
+    --meter-glow: rgba(110, 231, 183, 0.35);
+  }
+
+  .meter-card[data-color='yuzu'] {
+    --meter-primary: #fbbf24;
+    --meter-soft: rgba(251, 191, 36, 0.12);
+    --meter-gradient: linear-gradient(135deg, #fbbf24, #fb923c);
+    --meter-glow: rgba(251, 191, 36, 0.35);
+  }
+
+  .meter-card[data-color='sumi'] {
+    --meter-primary: #f472b6;
+    --meter-soft: rgba(244, 114, 182, 0.12);
+    --meter-gradient: linear-gradient(135deg, #f472b6, #60a5fa);
+    --meter-glow: rgba(244, 114, 182, 0.35);
+  }
+
+  .meter-head h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 3.4vw, 1.6rem);
+    line-height: 1.4;
+    color: var(--meter-primary);
+  }
+
+  .meter-head p {
+    margin-top: 6px;
+    font-size: 0.84rem;
+    color: var(--text-secondary);
+  }
+
+  /* ---------------- 表单 ---------------- */
+  .meter-form {
+    margin-top: 22px;
+    text-align: left;
+  }
+
+  .meter-label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+  }
+
+  .meter-row {
+    display: flex;
+    gap: 10px;
+  }
+
+  .meter-row input {
+    flex: 1;
+    min-width: 0;
+    padding: 12px 16px;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-md);
+    background: var(--bg);
+    color: var(--text);
+    font: inherit;
+    font-size: 0.92rem;
+    outline: none;
+    transition:
+      border-color 0.3s,
+      box-shadow 0.3s;
+  }
+
+  .meter-row input:focus {
+    border-color: var(--meter-primary);
+    box-shadow: 0 0 0 3px var(--meter-soft);
+  }
+
+  .meter-row input::placeholder {
+    color: var(--text-tertiary);
+  }
+
+  .meter-btn {
+    flex-shrink: 0;
+    background: var(--meter-gradient);
+    box-shadow: 0 4px 20px var(--meter-glow);
+  }
+
+  .meter-btn:hover {
+    box-shadow: 0 8px 28px var(--meter-glow);
+  }
+
+  .meter-error {
+    margin-top: 8px;
+    font-size: 0.78rem;
+    color: #fb7185;
+  }
+
+  .meter-error[hidden] {
+    display: none;
+  }
+
+  .meter-tip {
+    margin-top: 10px;
+    font-size: 0.74rem;
+    color: var(--text-tertiary);
+  }
+
+  /* ---------------- 结果区 ---------------- */
+  .meter-result {
+    margin-top: 20px;
+    padding: clamp(18px, 4vw, 24px);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius-md);
+    background: var(--meter-soft);
+    text-align: left;
+  }
+
+  .meter-result[hidden] {
+    display: none;
+  }
+
+  .meter-result.is-new {
+    animation: meter-in 0.45s var(--ease-out-expo);
+  }
+
+  .meter-result h3 {
+    margin-bottom: 12px;
+    font-family: var(--font-display);
+    font-size: 0.98rem;
+    text-align: center;
+    color: var(--meter-primary);
+  }
+
+  .meter-result p {
+    font-size: 0.84rem;
+    color: var(--text-secondary);
+  }
+
+  .meter-score-line {
+    margin-top: 6px;
+    text-align: center;
+  }
+
+  .meter-score-line strong {
+    margin-inline: 4px;
+    font-size: 2.4rem;
+    font-weight: 800;
+    line-height: 1.1;
+    color: var(--meter-primary);
+  }
+
+  .meter-unit {
+    margin-left: 2px;
+  }
+
+  .meter-comment {
+    margin-top: 12px;
+    font-size: 0.85rem;
+    line-height: 1.8;
+    color: var(--text);
+  }
+
+  @keyframes meter-in {
+    from {
+      opacity: 0;
+      transform: translateY(14px) scale(0.98);
+    }
+
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* ---------------- 主题色选择器 ---------------- */
+  .meter-colors {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+  }
+
+  .meter-colors__label {
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: var(--text-tertiary);
+  }
+
+  .meter-colors__row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .color-dot {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border: 2px solid transparent;
+    border-radius: 50%;
+    background: var(--dot);
+    cursor: pointer;
+    transition:
+      transform 0.3s var(--ease-spring),
+      box-shadow 0.3s;
+  }
+
+  .color-dot:hover {
+    transform: scale(1.15);
+  }
+
+  .color-dot[aria-pressed='true'] {
+    box-shadow:
+      0 0 0 3px var(--bg),
+      0 0 0 5px var(--meter-primary);
+    transform: scale(1.08);
+  }
+
+  /* ---------------- 底部说明 ---------------- */
+  .meter-footnote {
+    margin-top: 16px;
+    font-size: 0.76rem;
+    line-height: 1.7;
+    text-align: center;
+    color: var(--text-tertiary);
+  }
+
+  .meter-links {
+    display: flex;
+    justify-content: center;
+    margin-top: 12px;
+  }
+
+  .meter-links .back-link {
+    margin-top: 0;
+  }
+
+  /* ---------------- 响应式 ---------------- */
+  @media (max-width: 560px) {
+    .meter-row {
+      flex-direction: column;
+    }
+
+    .meter-btn {
+      width: 100%;
+    }
+
+    .meter-row input {
+      font-size: 1rem;
+    }
+
+    .meter-card {
+      padding: 22px 18px;
+    }
+  }
+</style>

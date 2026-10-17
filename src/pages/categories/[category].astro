@@ -1,0 +1,107 @@
+---
+/**
+ * 单个分类页：/categories/<category>
+ * 与标签页同构：构建期按分类聚合文章，复用 PostCard 网格。
+ * 分类值保持原文（中文不转 slug），站内链接由 getCategoryHref 统一编码。
+ */
+import type { Post } from '@/lib/content';
+import { getCategories, getCategoryHref, getPosts } from '@/lib/content';
+import { formatDate } from '@/lib/format';
+import { HERO_IMAGES } from '@/lib/images';
+import PageLayout from '@/layouts/PageLayout.astro';
+import PostCard from '@/components/PostCard.astro';
+import Icon from '@/components/Icon.astro';
+
+interface Props {
+  category: string;
+  count: number;
+  posts: Post[];
+}
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  const categories = getCategories(posts);
+
+  return categories.map(({ category, count }) => ({
+    params: { category },
+    props: {
+      category,
+      count,
+      posts: posts.filter((post) => post.data.category === category),
+    },
+  }));
+}
+
+const { category, count, posts } = Astro.props;
+const allPosts = await getPosts();
+const latest = posts.length > 0 ? posts[0] : undefined;
+const otherCategories = getCategories(allPosts).filter((item) => item.category !== category);
+const description = `分类「${category}」下的 ${count} 篇文章${latest ? `，最近更新于 ${formatDate(latest.data.date)}` : ''}。`;
+---
+
+<PageLayout
+  title={`分类：${category}`}
+  description={description}
+  eyebrow="CATEGORY"
+  heading="分类"
+  accent={category}
+  subtitle={`共 ${count} 篇文章`}
+  image={HERO_IMAGES.posts}
+  bodyClass="page-category"
+>
+  <div class="category-head">
+    <a class="back-link" href="/posts"><Icon name="arrow-left" size={14} /> 全部文章</a>
+    <div class="category-head__others">
+      {
+        otherCategories.map(({ category: otherCategory, count: otherCount }) => (
+          <a class="pill" href={getCategoryHref(otherCategory)}>
+            {otherCategory} · {otherCount}
+          </a>
+        ))
+      }
+    </div>
+  </div>
+
+  {
+    posts.length > 0 ? (
+      <div class="post-grid" data-anim="fade-up">
+        {posts.map((post) => (
+          <PostCard post={post} />
+        ))}
+      </div>
+    ) : (
+      <div class="empty-state">
+        <div class="empty-state__icon">📂</div>
+        <p>这个分类下暂时还没有文章。</p>
+      </div>
+    )
+  }
+
+  <div class="category-foot">
+    <a class="back-link" href="/posts"><Icon name="arrow-left" size={14} /> 全部文章</a>
+    <a class="back-link" href="/tags"><Icon name="tag" size={14} /> 全部标签</a>
+  </div>
+</PageLayout>
+
+<style>
+  .category-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 30px;
+  }
+
+  .category-head__others {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .category-foot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 44px;
+  }
+</style>

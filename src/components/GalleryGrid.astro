@@ -1,0 +1,122 @@
+---
+/**
+ * 图片网格 / 瀑布流
+ * - 构建期用 getImage 生成 1600px WebP 作为灯箱大图，点击直接打开，无额外请求
+ * - 网格图用 <Picture> 输出 AVIF/WebP + 多尺寸 srcset，懒加载
+ * - 分类筛选是纯前端 DOM 过滤，零依赖
+ */
+import { getImage, Image } from 'astro:assets';
+import type { GalleryItem } from '@/data/gallery';
+import { imageByKey } from '@/lib/images';
+import Icon from '@/components/Icon.astro';
+
+interface Props {
+  items: GalleryItem[];
+  filterable?: boolean;
+  masonry?: boolean;
+  compact?: boolean;
+  lightbox?: boolean;
+}
+
+const {
+  items,
+  filterable = false,
+  masonry = false,
+  compact = false,
+  lightbox = true,
+} = Astro.props;
+
+const fullImages = new Map<string, string>();
+if (lightbox) {
+  await Promise.all(
+    items.map(async (item) => {
+      const optimized = await getImage({
+        src: imageByKey(item.image),
+        width: 1600,
+        format: 'webp',
+        quality: 82,
+      });
+      fullImages.set(item.id, optimized.src);
+    }),
+  );
+}
+
+const categories = filterable
+  ? ['全部', ...Array.from(new Set(items.map((item) => item.category)))]
+  : [];
+
+const gridClass = masonry
+  ? 'gallery-masonry'
+  : compact
+    ? 'gallery-grid gallery-grid--compact'
+    : 'gallery-grid';
+---
+
+{
+  filterable && (
+    <div class="gallery-filter" data-gallery-filter role="group" aria-label="图片分类筛选">
+      {categories.map((category, index) => (
+        <button
+          class="filter-btn"
+          type="button"
+          data-filter={category}
+          aria-pressed={index === 0 ? 'true' : 'false'}
+        >
+          {category}
+        </button>
+      ))}
+    </div>
+  )
+}
+
+<div class={gridClass} data-gallery>
+  {
+    items.map((item) => {
+      const meta = imageByKey(item.image);
+      const full = fullImages.get(item.id);
+      return (
+        <button
+          type="button"
+          class="gallery-item"
+          data-category={item.category}
+          data-lightbox-src={full}
+          data-lightbox-alt={item.alt}
+          data-lightbox-caption={item.caption}
+          aria-label={`查看大图：${item.caption}`}
+        >
+          <Image
+            src={meta}
+            format="webp"
+            widths={[360, 720]}
+            sizes={
+              masonry
+                ? '(max-width: 640px) 50vw, 33vw'
+                : '(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw'
+            }
+            alt={item.alt}
+            loading="lazy"
+            decoding="async"
+            quality={76}
+          />
+          <span class="gallery-item__overlay">
+            <span class="gallery-item__caption">{item.caption}</span>
+          </span>
+          <span class="gallery-item__zoom" aria-hidden="true">
+            <Icon name="expand" size={15} />
+          </span>
+        </button>
+      );
+    })
+  }
+</div>
+
+{filterable && <p class="gallery-count" data-gallery-count aria-live="polite" />}
+
+<style>
+  .gallery-count {
+    text-align: center;
+    margin-top: 24px;
+    font-size: 0.8rem;
+    color: var(--text-tertiary);
+  }
+</style>

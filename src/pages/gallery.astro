@@ -1,0 +1,49 @@
+---
+/**
+ * 图片画廊：/gallery
+ * ----------------------------------------------------------------
+ * 22 张图全部来自 src/data/gallery.ts；GalleryGrid 负责
+ * 分类筛选（纯 DOM 过滤）与灯箱（构建期生成 1600px WebP 大图）。
+ */
+import { GALLERY_CATEGORIES, GALLERY_ITEMS } from '@/data/gallery';
+import { HERO_IMAGES } from '@/lib/images';
+import PageLayout from '@/layouts/PageLayout.astro';
+import GalleryGrid from '@/components/GalleryGrid.astro';
+import Icon from '@/components/Icon.astro';
+
+const categoryCount = GALLERY_CATEGORIES.filter((category) => category !== '全部').length;
+const description = `buling 的图片画廊：${GALLERY_ITEMS.length} 张图片，按夜景、少女、幻想等分类浏览，点击可放大查看。`;
+---
+
+<PageLayout
+  title="图片画廊"
+  description={description}
+  eyebrow="GALLERY"
+  heading="图片"
+  accent="画廊"
+  subtitle={`${GALLERY_ITEMS.length} 张图 · ${categoryCount} 个分类 · 点击任意一张可放大`}
+  image={HERO_IMAGES.gallery}
+  bodyClass="page-gallery"
+>
+  <div class="gallery-body" data-anim="fade-up">
+    <GalleryGrid items={GALLERY_ITEMS} filterable masonry />
+  </div>
+
+  <div class="gallery-foot">
+    <a class="back-link" href="/"><Icon name="arrow-left" size={14} /> 返回首页</a>
+    <a class="back-link" href="/works"><Icon name="palette" size={14} /> 看看作品</a>
+  </div>
+</PageLayout>
+
+<style>
+  .gallery-body {
+    margin-top: 4px;
+  }
+
+  .gallery-foot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 44px;
+  }
+</style>

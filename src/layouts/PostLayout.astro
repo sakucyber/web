@@ -1,0 +1,179 @@
+---
+/**
+ * 文章详情布局：标题区 / 封面 / 正文 / 目录 / 上一篇下一篇 / JSON-LD
+ * 阅读进度条由全站 app.ts 的 scroll-progress 承担。
+ */
+import { render } from 'astro:content';
+import { Picture } from 'astro:assets';
+import type { Post } from '@/lib/content';
+import { getCategoryHref, getReadingTime, getTagHref } from '@/lib/content';
+import { formatDate, toISODate } from '@/lib/format';
+import { hasImage, imageByKey } from '@/lib/images';
+import { SITE } from '@/config/site';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Icon from '@/components/Icon.astro';
+
+interface Props {
+  post: Post;
+  newer?: Post;
+  older?: Post;
+}
+
+const { post, newer, older } = Astro.props;
+const { Content, headings } = await render(post);
+const cover = hasImage(post.data.cover) ? imageByKey(post.data.cover) : undefined;
+const reading = getReadingTime(post.body);
+const date = post.data.date;
+const updated = post.data.updated;
+const canonical = new URL(`/posts/${post.id}/`, SITE.url).href;
+const toc = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.data.title,
+  description: post.data.description,
+  datePublished: date.toISOString(),
+  dateModified: (updated ?? date).toISOString(),
+  author: { '@type': 'Person', name: SITE.author, url: SITE.url },
+  publisher: { '@type': 'Person', name: SITE.author },
+  mainEntityOfPage: canonical,
+  keywords: post.data.tags.join(', '),
+  ...(cover ? { image: new URL(cover.src, SITE.url).href } : {}),
+};
+---
+
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  image={cover}
+  type="article"
+  publishedTime={date}
+  modifiedTime={updated}
+  tags={post.data.tags}
+  jsonLd={jsonLd}
+  preloadImage={cover}
+  bodyClass="page-post"
+>
+  <div class="page-main page-main--narrow">
+    <header class="post-head">
+      <a class="back-link" href="/posts"><Icon name="arrow-left" size={14} /> 全部文章</a>
+
+      <div class="post-head__meta">
+        <span
+          ><Icon name="calendar" size={14} /><time datetime={toISODate(date)}
+            >{formatDate(date)}</time
+          ></span
+        >
+        <a href={getCategoryHref(post.data.category)}>{post.data.category}</a>
+        <span><Icon name="clock" size={14} />{reading.label}</span>
+      </div>
+
+      <h1 class="post-title">{post.data.title}</h1>
+      <p class="post-desc">{post.data.description}</p>
+
+      {
+        post.data.tags.length > 0 && (
+          <div class="post-tags">
+            {post.data.tags.map((tag) => (
+              <a class="pill" href={getTagHref(tag)}>
+                #{tag}
+              </a>
+            ))}
+          </div>
+        )
+      }
+
+      {
+        cover && (
+          <figure class="post-cover">
+            <Picture
+              src={cover}
+              formats={['avif']}
+              fallbackFormat="webp"
+              widths={[800, 1400]}
+              sizes="(max-width: 760px) 100vw, 760px"
+              alt={post.data.title}
+              loading="eager"
+              fetchpriority="high"
+              quality={78}
+            />
+          </figure>
+        )
+      }
+    </header>
+
+    <div class="post-layout">
+      <div class="prose">
+        <Content />
+      </div>
+
+      {
+        toc.length > 1 && (
+          <aside class="post-aside" aria-label="文章目录">
+            <p class="toc-title">目录</p>
+            <nav class="toc-list">
+              {toc.map((heading) => (
+                <div class:list={['toc-depth-' + heading.depth]}>
+                  <a href={`#${heading.slug}`}>{heading.text}</a>
+                </div>
+              ))}
+            </nav>
+          </aside>
+        )
+      }
+    </div>
+
+    <nav class="post-nav" aria-label="上一篇与下一篇">
+      {
+        older ? (
+          <a href={`/posts/${older.id}/`}>
+            <span class="post-nav__label">← 上一篇</span>
+            <span class="post-nav__title">{older.data.title}</span>
+          </a>
+        ) : (
+          <span />
+        )
+      }
+      {
+        newer ? (
+          <a class="post-nav__link--next" href={`/posts/${newer.id}/`}>
+            <span class="post-nav__label">下一篇 →</span>
+            <span class="post-nav__title">{newer.data.title}</span>
+          </a>
+        ) : (
+          <span />
+        )
+      }
+    </nav>
+
+    <div class="post-foot">
+      <a class="back-link" href="/posts"><Icon name="arrow-left" size={14} /> 返回文章列表</a>
+      <a class="back-link" href="/rss.xml"><Icon name="rss" size={14} /> RSS 订阅</a>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 18px;
+  }
+
+  .post-head .back-link {
+    margin-bottom: 26px;
+  }
+
+  .post-foot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 40px;
+  }
+
+  .post-foot .back-link {
+    margin-top: 0;
+  }
+</style>

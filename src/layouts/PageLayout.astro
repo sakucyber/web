@@ -1,0 +1,104 @@
+---
+/**
+ * 普通内容页布局：沉浸式头图 + 标题 + 正文容器
+ * 首页单独实现 Hero，其余页面（画廊 / 作品 / 项目 / 文章列表 / 搜索）都走这里。
+ */
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  eyebrow?: string;
+  /** 主标题前半段 */
+  heading?: string;
+  /** 渐变强调词，如「画廊」 */
+  accent?: string;
+  subtitle?: string;
+  image?: ImageMetadata;
+  heroSize?: 'default' | 'tall' | 'full';
+  noindex?: boolean;
+  narrow?: boolean;
+  bodyClass?: string;
+}
+
+const {
+  title,
+  description,
+  eyebrow,
+  heading,
+  accent,
+  subtitle,
+  image,
+  heroSize = 'default',
+  noindex = false,
+  narrow = false,
+  bodyClass,
+} = Astro.props;
+
+const heroClass =
+  heroSize === 'tall' ? 'hero hero--tall' : heroSize === 'full' ? 'hero hero--full' : 'hero';
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  image={image}
+  noindex={noindex}
+  preloadImage={image}
+  bodyClass={bodyClass}
+>
+  <section class={heroClass}>
+    {
+      image && (
+        <div class="hero-bg" data-parallax="hero">
+          <Picture
+            src={image}
+            formats={['avif']}
+            fallbackFormat="webp"
+            widths={[800, 1600]}
+            sizes="100vw"
+            alt=""
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+            quality={78}
+          />
+        </div>
+      )
+    }
+    <div class="hero-content">
+      {
+        eyebrow && (
+          <div class="tag" data-anim="fade-up" data-delay style="--d:0">
+            {eyebrow}
+          </div>
+        )
+      }
+      <h1 data-anim="fade-up" data-delay style="--d:1">
+        {heading ?? title}
+        {
+          accent && (
+            <>
+              {' '}
+              <span class="accent">{accent}</span>
+            </>
+          )
+        }
+      </h1>
+      {
+        subtitle && (
+          <p data-anim="fade-up" data-delay style="--d:2">
+            {subtitle}
+          </p>
+        )
+      }
+      <slot name="hero-actions" />
+    </div>
+  </section>
+
+  <div class:list={['page-main', narrow && 'page-main--narrow']}>
+    <slot />
+  </div>
+</BaseLayout>

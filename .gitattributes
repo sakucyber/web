@@ -1,0 +1,15 @@
+# 统一换行符，避免 Windows / macOS 协作时整文件 diff
+* text=auto eol=lf
+
+# 二进制资源不做换行符转换
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.webp binary
+*.avif binary
+*.woff binary
+*.woff2 binary
+*.ico binary
+
+# 锁文件与生成产物
+package-lock.json text eol=lf

@@ -1,0 +1,156 @@
+---
+/**
+ * 作品列表页：/works
+ * ----------------------------------------------------------------
+ * 作品卡片全部来自 src/content/works/（getWorks 已按 order、日期排序），
+ * 标题区显示构建期统计；项目页交互由 WorkCard 的 href 指向 /project/*。
+ */
+import { getWorks } from '@/lib/content';
+import { HERO_IMAGES } from '@/lib/images';
+import PageLayout from '@/layouts/PageLayout.astro';
+import WorkCard from '@/components/WorkCard.astro';
+import Icon from '@/components/Icon.astro';
+
+const works = await getWorks();
+const stack = [...new Set(works.flatMap((work) => work.data.stack))];
+const playable = works.filter((work) => work.data.status.includes('玩')).length;
+const description = `buling 的作品列表：${works.length} 个小项目，包括小游戏、趣味测试与 AI 聊天玩具，点开就能玩。`;
+---
+
+<PageLayout
+  title="我的作品"
+  description={description}
+  eyebrow="PORTFOLIO"
+  heading="我的"
+  accent="作品"
+  subtitle="用心制作的每一个项目，点开就能直接玩"
+  image={HERO_IMAGES.works}
+  bodyClass="page-works"
+>
+  {
+    works.length > 0 ? (
+      <>
+        <div class="work-stats" data-anim="fade-up">
+          <div class="work-stat">
+            <strong>{works.length}</strong>
+            <span>个作品</span>
+          </div>
+          <div class="work-stat">
+            <strong>{stack.length}</strong>
+            <span>种技术栈</span>
+          </div>
+          <div class="work-stat">
+            <strong>{playable}</strong>
+            <span>个在线可玩</span>
+          </div>
+        </div>
+
+        <p class="work-intro" data-anim="fade-up" data-delay style="--d:1">
+          从一句话回复的
+          AI贴吧老哥，到用哈希算出来的男娘指数，再到浏览器里的卡牌算分——都是些「点开就能玩」的小东西。
+          技术栈以 HTML / CSS / JavaScript 和 React 为主，全部跑在前端。
+        </p>
+
+        <div class="work-grid" data-anim="fade-up" data-delay style="--d:2">
+          {works.map((work) => (
+            <WorkCard work={work} />
+          ))}
+        </div>
+      </>
+    ) : (
+      <div class="empty-state">
+        <div class="empty-state__icon">🧩</div>
+        <p>还没有作品，先去写一个吧。</p>
+      </div>
+    )
+  }
+
+  <div class="works-foot">
+    <a class="btn-static" href="/project">项目中心 <Icon name="arrow-right" size={14} /></a>
+    <a class="btn--ghost" href="/gallery"><Icon name="palette" size={14} /> 逛逛画廊</a>
+    <a class="back-link" href="/"><Icon name="home" size={14} /> 返回首页</a>
+  </div>
+</PageLayout>
+
+<style>
+  .work-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+
+  .work-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 18px 12px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+  }
+
+  .work-stat strong {
+    font-family: var(--font-display);
+    font-size: 1.9rem;
+    line-height: 1.2;
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: var(--primary);
+  }
+
+  .work-stat span {
+    font-size: 0.78rem;
+    color: var(--text-tertiary);
+    font-weight: 600;
+  }
+
+  .work-intro {
+    max-width: 720px;
+    margin: 0 auto 34px;
+    text-align: center;
+    font-size: 0.92rem;
+    line-height: 1.9;
+    color: var(--text-secondary);
+  }
+
+  .work-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 22px;
+  }
+
+  .works-foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-top: 48px;
+  }
+
+  @media (max-width: 900px) {
+    .work-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .work-stats {
+      grid-template-columns: 1fr;
+    }
+
+    .work-stat {
+      flex-direction: row;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px;
+    }
+
+    .work-stat strong {
+      font-size: 1.4rem;
+    }
+  }
+</style>
