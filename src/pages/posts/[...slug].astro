@@ -1,0 +1,33 @@
+---
+/**
+ * 文章详情页：/posts/<post.id>
+ * ----------------------------------------------------------------
+ * 完全由内容集合驱动：getStaticPaths 为每篇已发布文章生成一个静态页，
+ * 上一篇 / 下一篇在构建期用 getAdjacentPosts 计算好，运行时零请求。
+ */
+import type { Post } from '@/lib/content';
+import { getAdjacentPosts, getPosts } from '@/lib/content';
+import PostLayout from '@/layouts/PostLayout.astro';
+
+interface Props {
+  post: Post;
+  newer?: Post;
+  older?: Post;
+}
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+
+  return posts.map((post) => {
+    const { newer, older } = getAdjacentPosts(posts, post.id);
+    return {
+      params: { slug: post.id },
+      props: { post, newer, older },
+    };
+  });
+}
+
+const { post, newer, older } = Astro.props;
+---
+
+<PostLayout post={post} newer={newer} older={older} />

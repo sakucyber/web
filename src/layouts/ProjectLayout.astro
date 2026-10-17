@@ -1,0 +1,98 @@
+---
+/**
+ * 项目详情布局：统一头图 + Markdown 介绍 + 交互区插槽
+ * ai / femboy / balatro 三个小项目都用它承载，保证视觉与结构一致。
+ */
+import { render } from 'astro:content';
+import { Picture } from 'astro:assets';
+import type { Work } from '@/lib/content';
+import { imageByKey } from '@/lib/images';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Icon from '@/components/Icon.astro';
+
+interface Props {
+  work: Work;
+}
+
+const { work } = Astro.props;
+const { Content } = await render(work);
+const cover = imageByKey(work.data.cover);
+---
+
+<BaseLayout
+  title={`${work.data.title} · 项目`}
+  description={work.data.description}
+  image={cover}
+  noindex={work.data.noindex}
+  preloadImage={cover}
+  bodyClass="page-project"
+>
+  <section class="project-hero">
+    <div class="project-hero__bg">
+      <Picture
+        src={cover}
+        formats={['avif']}
+        fallbackFormat="webp"
+        widths={[800, 1600]}
+        sizes="100vw"
+        alt=""
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
+        quality={78}
+      />
+    </div>
+    <div class="container project-hero__body">
+      <div class="project-hero__emoji" aria-hidden="true">{work.data.emoji}</div>
+      <h1>{work.data.title}</h1>
+      <p>{work.data.description}</p>
+      <div class="project-meta">
+        <span class="project-status">{work.data.status}</span>
+        {work.data.tags.map((tag) => <span class="pill">{tag}</span>)}
+        {work.data.stack.map((item) => <span class="pill">{item}</span>)}
+      </div>
+      <div class="project-hero__actions">
+        <slot name="actions" />
+        <a class="back-link" href="/works"><Icon name="arrow-left" size={14} /> 全部作品</a>
+        <a class="back-link" href="/project"><Icon name="home" size={14} /> 项目中心</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="page-main">
+    <div class="project-intro prose">
+      <Content />
+    </div>
+    <slot />
+  </div>
+</BaseLayout>
+
+<style>
+  .project-intro {
+    max-width: var(--container-narrow);
+    margin-inline: auto;
+    margin-bottom: 40px;
+    padding-top: 8px;
+  }
+
+  .project-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #6ee7b7;
+    background: rgba(110, 231, 183, 0.1);
+    border: 1px solid rgba(110, 231, 183, 0.3);
+  }
+
+  .project-status::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #6ee7b7;
+  }
+</style>

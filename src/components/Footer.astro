@@ -1,0 +1,27 @@
+---
+/** 全站页脚：导航、RSS、版权 */
+import { SITE } from '@/config/site';
+import Icon from '@/components/Icon.astro';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="footer-links">
+    <a href="/posts">文章</a>
+    <a href="/works">作品</a>
+    <a href="/project">项目中心</a>
+    <a href="/gallery">画廊</a>
+    <a href="/rss.xml" aria-label="RSS 订阅">
+      <Icon name="rss" size={14} /> RSS
+    </a>
+    <a href="/sitemap.xml">Sitemap</a>
+  </div>
+  <p>{SITE.copyright.replace('2025–2026', `2025–${year}`)}</p>
+  <p style="margin-top:6px;font-size:.72rem;opacity:.75">
+    由 <a href="https://astro.build" rel="noopener noreferrer" target="_blank">Astro</a> 构建 · 部署于
+    <a href="https://pages.cloudflare.com" rel="noopener noreferrer" target="_blank"
+      >Cloudflare Pages</a
+    >
+  </p>
+</footer>

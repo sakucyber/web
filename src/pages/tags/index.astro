@@ -1,0 +1,72 @@
+---
+/**
+ * 全部标签页：/tags
+ * 标签与计数全部来自内容集合（getTags），字号按文章数量轻微放大，
+ * 形成轻量「标签云」——没有手写清单。
+ */
+import { getPosts, getTagHref, getTags } from '@/lib/content';
+import { HERO_IMAGES } from '@/lib/images';
+import PageLayout from '@/layouts/PageLayout.astro';
+import Icon from '@/components/Icon.astro';
+
+const posts = await getPosts();
+const tags = getTags(posts);
+const maxCount = tags.reduce((max, tag) => Math.max(max, tag.count), 1);
+const description = `按标签浏览 buling 的文章：共 ${tags.length} 个标签、${posts.length} 篇文章。`;
+---
+
+<PageLayout
+  title="全部标签"
+  description={description}
+  eyebrow="TAGS"
+  heading="全部"
+  accent="标签"
+  subtitle={`共 ${tags.length} 个标签 · ${posts.length} 篇文章`}
+  image={HERO_IMAGES.posts}
+  bodyClass="page-tags"
+>
+  {
+    tags.length > 0 ? (
+      <div class="tag-cloud tag-cloud--all" data-anim="fade-up">
+        {tags.map(({ tag, count }) => (
+          <a
+            href={getTagHref(tag)}
+            style={`font-size:${(0.85 + (count / maxCount) * 0.45).toFixed(2)}rem`}
+            aria-label={`标签 ${tag}，共 ${count} 篇文章`}
+          >
+            #{tag} <small>{count}</small>
+          </a>
+        ))}
+      </div>
+    ) : (
+      <div class="empty-state">
+        <div class="empty-state__icon">🏷️</div>
+        <p>还没有标签，文章里加上 tags 就会出现在这里。</p>
+      </div>
+    )
+  }
+
+  <div class="tags-foot">
+    <a class="back-link" href="/posts"><Icon name="arrow-left" size={14} /> 全部文章</a>
+    <a class="back-link" href="/"><Icon name="home" size={14} /> 返回首页</a>
+    <a class="back-link" href="/rss.xml"><Icon name="rss" size={14} /> RSS 订阅</a>
+  </div>
+</PageLayout>
+
+<style>
+  .tag-cloud--all {
+    gap: 12px;
+    padding: 8px 0 4px;
+  }
+
+  .tag-cloud--all a {
+    padding: 10px 20px;
+  }
+
+  .tags-foot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 44px;
+  }
+</style>

@@ -1,0 +1,108 @@
+---
+/**
+ * 项目中心：/project
+ * ----------------------------------------------------------------
+ * 与 /works 的区别：项目中心更偏「能直接玩的小工具」，卡片用 WorkCard compact 矮一档，
+ * 详情页在 /project/ai、/project/femboy、/project/balatro。
+ */
+import { getWorks } from '@/lib/content';
+import { HERO_IMAGES } from '@/lib/images';
+import PageLayout from '@/layouts/PageLayout.astro';
+import WorkCard from '@/components/WorkCard.astro';
+import Icon from '@/components/Icon.astro';
+
+const works = await getWorks();
+const description = 'buling 的项目中心：小游戏与趣味工具集合，点开卡片就能在浏览器里直接体验。';
+---
+
+<PageLayout
+  title="项目中心"
+  description={description}
+  eyebrow="PROJECT CENTER"
+  heading="项目"
+  accent="中心"
+  subtitle="小游戏与趣味工具集合，点开就能玩"
+  image={HERO_IMAGES.project}
+  bodyClass="page-project-center"
+>
+  <p class="project-lead" data-anim="fade-up">
+    这里收着一些「顺手做出来、但真的能玩」的小东西：一个用五个 <code>if</code> 装作 AI 的贴吧老哥、一个把昵称哈希成分数的男娘程度总结器，
+    以及浏览器里还原《小丑牌》核心循环的卡牌游戏。全部纯前端实现，不用注册、不用安装——点开卡片就行。
+  </p>
+
+  {
+    works.length > 0 ? (
+      <div class="project-grid" data-anim="fade-up" data-delay style="--d:1">
+        {works.map((work) => (
+          <WorkCard work={work} compact />
+        ))}
+      </div>
+    ) : (
+      <div class="empty-state">
+        <div class="empty-state__icon">🛠️</div>
+        <p>项目还在路上，先去看看作品吧。</p>
+      </div>
+    )
+  }
+
+  {
+    works.length > 0 && (
+      <p class="project-note" data-anim="fade-up" data-delay style="--d:2">
+        想按「作品集」的方式浏览？去 <a href="/works">全部作品</a>；或者去{' '}
+        <a href="/gallery">画廊</a> 看看图。
+      </p>
+    )
+  }
+
+  <div class="project-foot">
+    <a class="back-link" href="/works"><Icon name="arrow-left" size={14} /> 全部作品</a>
+    <a class="back-link" href="/gallery"><Icon name="palette" size={14} /> 图片画廊</a>
+    <a class="back-link" href="/"><Icon name="home" size={14} /> 返回首页</a>
+  </div>
+</PageLayout>
+
+<style>
+  .project-lead {
+    max-width: 760px;
+    margin: 0 auto 36px;
+    text-align: center;
+    font-size: 0.95rem;
+    line-height: 2;
+    color: var(--text-secondary);
+  }
+
+  .project-lead code {
+    padding: 1px 6px;
+    border-radius: 6px;
+    background: var(--bg-elevated);
+    font-family: var(--font-mono);
+    font-size: 0.86em;
+    color: var(--primary);
+  }
+
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    gap: 22px;
+  }
+
+  .project-note {
+    margin-top: 32px;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-tertiary);
+  }
+
+  .project-foot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 44px;
+  }
+
+  @media (max-width: 860px) {
+    .project-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

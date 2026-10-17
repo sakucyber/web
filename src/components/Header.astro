@@ -1,0 +1,69 @@
+---
+/** 全站顶部导航：桌面横向菜单 + 移动端抽屉 + 主题切换 + 搜索入口 */
+import { SITE, isActive } from '@/config/site';
+import Icon from '@/components/Icon.astro';
+
+const pathname = Astro.url.pathname.replace(/\/+$/, '') || '/';
+---
+
+<header class="site-header">
+  <nav class="navbar" id="navbar" aria-label="主导航">
+    <div class="navbar-inner">
+      <a href="/" class="logo" aria-label="buling 的个人小窝 · 返回首页">✨ buling</a>
+
+      <ul class="nav-links" id="navLinks">
+        {
+          SITE.nav.map((item) => (
+            <li>
+              <a href={item.href} aria-current={isActive(pathname, item) ? 'page' : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="nav-actions">
+        <a class="icon-btn" href="/search" aria-label="搜索全站" title="搜索（按 / 键）">
+          <Icon name="search" size={17} />
+        </a>
+        <button
+          class="icon-btn theme-btn"
+          id="themeToggle"
+          type="button"
+          aria-label="切换深色/浅色主题"
+          title="切换深色/浅色主题"
+        >
+          <Icon name="moon" size={17} class="icon-moon" />
+          <Icon name="sun" size={17} class="icon-sun" />
+        </button>
+        <button
+          class="hamburger"
+          id="hamburger"
+          type="button"
+          aria-label="展开菜单"
+          aria-expanded="false"
+          aria-controls="navLinks"
+        >
+          <Icon name="menu" size={19} class="icon-open" />
+          <Icon name="close" size={19} class="icon-close" />
+        </button>
+      </div>
+    </div>
+  </nav>
+  <div class="nav-backdrop" id="navBackdrop" aria-hidden="true"></div>
+</header>
+
+<style>
+  .hamburger .icon-close {
+    display: none;
+  }
+
+  .hamburger[aria-expanded='true'] .icon-open {
+    display: none;
+  }
+
+  .hamburger[aria-expanded='true'] .icon-close {
+    display: block;
+  }
+</style>

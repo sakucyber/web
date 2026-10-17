@@ -1,0 +1,33 @@
+---
+/** 内联 SVG 图标组件：图标数据在 src/lib/icons.ts */
+import { ICONS, type IconName } from '@/lib/icons';
+
+interface Props {
+  name: IconName;
+  size?: number;
+  strokeWidth?: number;
+  class?: string;
+  /** 无障碍标签；不传则视为装饰性图标 aria-hidden */
+  label?: string;
+}
+
+const { name, size = 18, strokeWidth = 1.8, class: className, label } = Astro.props;
+const icon = ICONS[name];
+---
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  width={size}
+  height={size}
+  fill={icon.filled ? 'currentColor' : 'none'}
+  stroke={icon.filled ? 'none' : 'currentColor'}
+  stroke-width={strokeWidth}
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  class={className}
+  role={label ? 'img' : undefined}
+  aria-label={label}
+  aria-hidden={label ? undefined : 'true'}
+  set:html={icon.body}
+/>

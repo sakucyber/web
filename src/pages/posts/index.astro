@@ -1,0 +1,204 @@
+---
+/**
+ * 文章列表页：/posts
+ * ----------------------------------------------------------------
+ * - 构建期渲染全部文章卡片（PostCard），客户端过滤只做 DOM 显隐，
+ *   因此无 JS 时也能正常浏览全部文章；
+ * - 过滤逻辑在 src/scripts/post-filter.ts，按卡片上的 data-search 文本匹配；
+ * - 标签 / 分类入口全部来自内容集合，不手写列表。
+ */
+import { formatDate } from '@/lib/format';
+import { getCategories, getCategoryHref, getPosts, getTags, getTagHref } from '@/lib/content';
+import { HERO_IMAGES } from '@/lib/images';
+import PageLayout from '@/layouts/PageLayout.astro';
+import PostCard from '@/components/PostCard.astro';
+import Icon from '@/components/Icon.astro';
+
+const posts = await getPosts();
+const tags = getTags(posts);
+const categories = getCategories(posts);
+
+const latest = posts.length > 0 ? posts[0] : undefined;
+const subtitle = latest
+  ? `共 ${posts.length} 篇 · 最近更新于 ${formatDate(latest.data.date)}`
+  : '记录学习、项目与生活';
+const description = latest
+  ? `buling 的 ${posts.length} 篇文章，按时间倒序排列，支持关键词过滤与标签、分类浏览。`
+  : 'buling 的文章列表，记录学习、项目与生活。';
+---
+
+<PageLayout
+  title="文章"
+  description={description}
+  eyebrow="ARTICLES"
+  heading="文章"
+  subtitle={subtitle}
+  image={HERO_IMAGES.posts}
+  bodyClass="page-posts"
+>
+  <div class="posts-tools">
+    <div class="search-form">
+      <label class="visually-hidden" for="postFilter">按关键词过滤文章</label>
+      <input
+        id="postFilter"
+        class="search-input"
+        type="search"
+        name="q"
+        placeholder="搜索标题、摘要或标签…"
+        autocomplete="off"
+        spellcheck="false"
+        aria-controls="postGrid"
+        aria-describedby="postCount"
+      />
+      <span class="search-form__icon" aria-hidden="true"><Icon name="search" size={18} /></span>
+    </div>
+    <p class="search-status" id="postCount" data-post-count aria-live="polite">
+      共 {posts.length} 篇文章
+    </p>
+  </div>
+
+  {
+    categories.length > 0 && (
+      <nav class="posts-cats" aria-label="按分类浏览">
+        <span class="posts-cats__label">分类</span>
+        {categories.map((category) => (
+          <a class="pill" href={getCategoryHref(category.category)}>
+            {category.category} · {category.count}
+          </a>
+        ))}
+      </nav>
+    )
+  }
+
+  {
+    tags.length > 0 && (
+      <nav class="posts-tags" aria-label="按标签浏览">
+        <span class="posts-tags__label">
+          <Icon name="tag" size={14} /> 标签
+        </span>
+        <div class="tag-cloud">
+          {tags.map(({ tag, count }) => (
+            <a href={getTagHref(tag)}>
+              #{tag} <small>{count}</small>
+            </a>
+          ))}
+        </div>
+        <a class="posts-tags__all" href="/tags">
+          全部标签 <Icon name="arrow-right" size={14} />
+        </a>
+      </nav>
+    )
+  }
+
+  {
+    posts.length > 0 ? (
+      <div class="post-grid" id="postGrid" data-post-grid data-anim="fade-up">
+        {posts.map((post) => (
+          <PostCard post={post} />
+        ))}
+      </div>
+    ) : (
+      <div class="empty-state">
+        <div class="empty-state__icon">📝</div>
+        <p>还没有文章，先去写一篇吧。</p>
+      </div>
+    )
+  }
+
+  <div class="empty-state" data-post-empty hidden>
+    <div class="empty-state__icon">🔍</div>
+    <p>没有找到匹配的文章，换个关键词试试～</p>
+  </div>
+
+  <div class="posts-foot">
+    <a class="back-link" href="/"><Icon name="arrow-left" size={14} /> 返回首页</a>
+    <a class="back-link" href="/tags"><Icon name="tag" size={14} /> 全部标签</a>
+    <a class="back-link" href="/rss.xml"><Icon name="rss" size={14} /> RSS 订阅</a>
+  </div>
+</PageLayout>
+
+<script>
+  import '@/scripts/post-filter';
+</script>
+
+<style>
+  .posts-tools {
+    margin-bottom: 24px;
+  }
+
+  .search-form__icon {
+    position: absolute;
+    top: 50%;
+    right: 22px;
+    transform: translateY(-50%);
+    display: inline-flex;
+    color: var(--text-tertiary);
+    pointer-events: none;
+  }
+
+  .posts-tools .search-status {
+    margin-top: 12px;
+  }
+
+  .posts-cats {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .posts-cats__label,
+  .posts-tags__label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+  }
+
+  .posts-tags {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+    padding-bottom: 26px;
+    margin-bottom: 30px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .posts-tags .tag-cloud {
+    flex: 1 1 320px;
+  }
+
+  .posts-tags .tag-cloud a {
+    padding: 6px 14px;
+    font-size: 0.78rem;
+  }
+
+  .posts-tags__all {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .posts-foot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 44px;
+  }
+</style>
+
+<style is:global>
+  /* 客户端过滤隐藏卡片：组件内联不了类名，这里按页补充（仅本页打包） */
+  .post-card.is-hidden {
+    display: none;
+  }
+</style>

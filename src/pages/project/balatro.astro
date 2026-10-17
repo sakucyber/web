@@ -1,0 +1,348 @@
+---
+/**
+ * 项目页：小丑牌（Balatro）
+ * ----------------------------------------------------------------
+ * ProjectLayout 负责头图 / 标题 / 作品 meta，Markdown 介绍来自
+ * src/content/works/balatro.md。
+ * 游戏构建产物在 public/games/balatro/index.html（约 200KB 单文件），
+ * iframe 预览由 src/scripts/balatro-embed.ts 在点击后才创建，初始不请求游戏包。
+ */
+import ProjectLayout from '@/layouts/ProjectLayout.astro';
+import Icon from '@/components/Icon.astro';
+import { getWorkByHref } from '@/lib/content';
+
+const work = await getWorkByHref('/project/balatro');
+if (!work) {
+  throw new Error('缺少作品元数据：src/content/works/balatro.md 的 href 应为 /project/balatro');
+}
+
+const postHref = '/posts/2026-09-28-balatro';
+const GAME_URL = '/games/balatro/';
+const TECH_STACK = ['React 18', 'Vite', 'JavaScript', 'useReducer', 'vite-plugin-singlefile'];
+---
+
+<ProjectLayout work={work}>
+  <Fragment slot="actions">
+    <a class="btn" href={GAME_URL} target="_blank" rel="noopener noreferrer">
+      🃏 开始游戏 <Icon name="external" size={14} />
+    </a>
+    <a class="back-link" href={GAME_URL} target="_blank" rel="noopener noreferrer">
+      <Icon name="expand" size={14} /> 全屏游玩
+    </a>
+  </Fragment>
+
+  <section class="play-section" id="play" aria-labelledby="play-heading">
+    <div class="play-head">
+      <div>
+        <h2 id="play-heading">直接开玩</h2>
+        <p>选牌、算分、逛商店 —— 完整的一局都在浏览器里跑，不用安装，也不用登录。</p>
+      </div>
+      <div class="play-actions">
+        <a class="btn" href={GAME_URL} target="_blank" rel="noopener noreferrer">
+          🃏 开始游戏 <Icon name="external" size={14} />
+        </a>
+        <a class="back-link" href={GAME_URL} target="_blank" rel="noopener noreferrer">
+          <Icon name="expand" size={14} /> 全屏游玩
+        </a>
+      </div>
+    </div>
+
+    <div class="project-embed play-embed" data-balatro-embed>
+      <div class="embed-placeholder" data-balatro-placeholder>
+        <div class="embed-emoji" aria-hidden="true">🃏</div>
+        <h3>试玩预览</h3>
+        <p>
+          点击后才加载单文件游戏包（约 200KB），在此之前不会发出任何游戏资源请求。<br />
+          加载完成后可以直接在下面选牌、出牌。
+        </p>
+        <button class="btn" type="button" data-balatro-load data-src="/games/balatro/index.html">
+          加载试玩预览 <Icon name="expand" size={14} />
+        </button>
+        <p class="embed-hint">想要更大的画面？点上方「全屏游玩」在新窗口打开。</p>
+      </div>
+    </div>
+
+    <p class="embed-status" data-balatro-status role="status" aria-live="polite" hidden>
+      🃏 正在加载游戏…
+    </p>
+    <noscript>
+      <p class="embed-hint">试玩预览需要 JavaScript，请直接点「开始游戏」在新窗口游玩。</p>
+    </noscript>
+  </section>
+
+  <div class="info-grid">
+    <section class="info-card" aria-labelledby="gameplay-heading">
+      <h2 id="gameplay-heading">🎮 玩法介绍</h2>
+      <ul>
+        <li>选牌 → 出牌 → 算分 → 逛商店，在有限的出牌次数内凑够盲注分数。</li>
+        <li>13 种牌型决定基础「筹码 × 倍率」，五十多张小丑牌负责把数字继续放大。</li>
+        <li>8 轮盲注，目标从 300 一路涨到 150000；Boss 盲注会附加额外限制。</li>
+        <li>商店刷新、利息与强化牌，让每一轮都要在「现在」和「以后」之间做取舍。</li>
+      </ul>
+    </section>
+
+    <section class="info-card" aria-labelledby="stack-heading">
+      <h2 id="stack-heading">🧱 技术栈</h2>
+      <div class="info-pills">
+        {TECH_STACK.map((item) => <span class="pill">{item}</span>)}
+      </div>
+      <ul>
+        <li>React 18 函数组件，整局状态交给一个 useReducer 状态机。</li>
+        <li>Vite 构建，vite-plugin-singlefile 把 JS / CSS 内联成一个自包含 HTML。</li>
+        <li>Fisher–Yates 洗牌、chips × mult × xMult 算分，纯前端无后端。</li>
+        <li>打包后约 200KB，挂在静态站里即点即玩。</li>
+      </ul>
+    </section>
+  </div>
+
+  <section class="info-card source-card" aria-labelledby="source-heading">
+    <h2 id="source-heading">📁 源码说明</h2>
+    <p>
+      React 源码在仓库的 <code>projects/balatro/</code> 目录（Vite 工程），
+      <code>jokers.js</code> 等文件定义小丑牌与算分逻辑。构建产物被复制到
+      <code>public/games/balatro/index.html</code>，随 Astro 站点一起发布。
+    </p>
+    <ul>
+      <li>已知限制：商店 voucher 与个别小丑尚未实现，第 8 轮的胜利判定还在修。</li>
+      <li>预览用的就是线上同一份构建产物，加载后不会再请求额外资源。</li>
+    </ul>
+    <a class="back-link" href={postHref}>
+      读读完整实现笔记 <Icon name="arrow-right" size={14} />
+    </a>
+  </section>
+</ProjectLayout>
+
+<script>
+  import '@/scripts/balatro-embed';
+</script>
+
+<style>
+  .play-section,
+  .info-grid,
+  .source-card {
+    max-width: 900px;
+    margin-inline: auto;
+  }
+
+  .play-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 18px;
+  }
+
+  .play-head h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 3vw, 1.5rem);
+  }
+
+  .play-head p {
+    max-width: 520px;
+    margin-top: 6px;
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: var(--text-secondary);
+  }
+
+  .play-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  /* ---------- 懒加载预览 ---------- */
+  .play-embed {
+    margin-top: 4px;
+    background: var(--bg-card);
+  }
+
+  .embed-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: clamp(30px, 6vw, 56px) 24px;
+    text-align: center;
+  }
+
+  .embed-placeholder[hidden] {
+    display: none;
+  }
+
+  .embed-emoji {
+    font-size: 2.6rem;
+    animation: embed-bob 3s ease-in-out infinite;
+  }
+
+  .embed-placeholder h3 {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    color: var(--text);
+  }
+
+  .embed-placeholder p {
+    max-width: 460px;
+    font-size: 0.82rem;
+    line-height: 1.8;
+    color: var(--text-tertiary);
+  }
+
+  .embed-placeholder .btn {
+    margin-top: 4px;
+  }
+
+  .embed-hint {
+    font-size: 0.72rem;
+    line-height: 1.7;
+    color: var(--text-tertiary);
+  }
+
+  .project-embed :global(.balatro-frame) {
+    display: block;
+    width: 100%;
+    height: min(62vh, 600px);
+    border: 0;
+    background: #0a0a12;
+    animation: embed-in 0.35s ease;
+  }
+
+  @keyframes embed-in {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  .embed-status {
+    margin: 10px 0 0;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--text-tertiary);
+  }
+
+  .embed-status[hidden] {
+    display: none;
+  }
+
+  @keyframes embed-bob {
+    0%,
+    100% {
+      transform: translateY(0) rotate(0deg);
+    }
+
+    50% {
+      transform: translateY(-8px) rotate(6deg);
+    }
+  }
+
+  /* ---------- 介绍卡片 ---------- */
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 30px;
+  }
+
+  .info-card {
+    padding: 22px 24px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--bg-card);
+  }
+
+  .info-card h2 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    font-family: var(--font-display);
+    font-size: 1.02rem;
+  }
+
+  .info-card ul {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    list-style: none;
+  }
+
+  .info-card li {
+    position: relative;
+    padding-left: 16px;
+    font-size: 0.83rem;
+    line-height: 1.75;
+    color: var(--text-secondary);
+  }
+
+  .info-card li::before {
+    content: '✦';
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 0.7rem;
+    color: var(--primary);
+  }
+
+  .info-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .source-card {
+    margin-top: 18px;
+  }
+
+  .source-card code {
+    padding: 2px 6px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg-elevated);
+    color: var(--primary);
+    font-family: var(--font-mono);
+    font-size: 0.82em;
+  }
+
+  .source-card p {
+    margin-bottom: 12px;
+    font-size: 0.84rem;
+    line-height: 1.85;
+    color: var(--text-secondary);
+  }
+
+  .source-card .back-link {
+    margin-top: 14px;
+  }
+
+  /* ---------- 响应式 ---------- */
+  @media (max-width: 768px) {
+    .info-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .play-head {
+      align-items: flex-start;
+    }
+
+    .project-embed :global(.balatro-frame) {
+      height: min(70vh, 520px);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .info-card {
+      padding: 18px;
+    }
+
+    .embed-placeholder {
+      padding: 26px 16px;
+    }
+  }
+</style>

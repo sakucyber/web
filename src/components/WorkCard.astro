@@ -1,0 +1,58 @@
+---
+/** 作品大图卡：首页精选 / 作品列表 / 项目中心共用 */
+import { Image } from 'astro:assets';
+import type { Work } from '@/lib/content';
+import { getWorkHref } from '@/lib/content';
+import { imageByKey } from '@/lib/images';
+import Icon from '@/components/Icon.astro';
+
+interface Props {
+  work: Work;
+  /** 卡片高度，项目中心可以更矮一些 */
+  compact?: boolean;
+}
+
+const { work, compact = false } = Astro.props;
+const cover = imageByKey(work.data.cover);
+const href = getWorkHref(work);
+const isExternal = /^https?:\/\//i.test(href);
+---
+
+<a
+  class:list={['work-card', compact && 'work-card--compact']}
+  href={href}
+  data-featured={work.data.featured}
+  {...isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {}}
+>
+  <span class="work-card__status">{work.data.status}</span>
+  <div class="work-card__media">
+    <Image
+      src={cover}
+      format="webp"
+      widths={[480, 960]}
+      sizes="(max-width: 900px) 100vw, 50vw"
+      alt=""
+      loading="lazy"
+      decoding="async"
+      quality={78}
+    />
+  </div>
+  <div class="work-card__body">
+    <span class="work-card__emoji" aria-hidden="true">{work.data.emoji}</span>
+    <h3 class="work-card__title">{work.data.title}</h3>
+    <p class="work-card__desc">{work.data.description}</p>
+    <div class="work-card__tags">
+      {work.data.tags.map((tag) => <span class="pill">{tag}</span>)}
+    </div>
+    <span class="work-card__cta">
+      {work.data.linkLabel}
+      <Icon name="arrow-right" size={14} />
+    </span>
+  </div>
+</a>
+
+<style>
+  .work-card--compact {
+    height: 340px;
+  }
+</style>

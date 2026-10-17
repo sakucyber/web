@@ -1,0 +1,14 @@
+# Cloudflare Pages 重定向：保留旧版多 HTML 时代的 URL
+# 文档：https://developers.cloudflare.com/pages/configuration/redirects/
+# 格式：<旧路径> <新路径> <状态码>
+
+/index.html            /                       301
+/gallery.html          /gallery/               301
+/works.html            /works/                 301
+/project/index.html    /project/               301
+/project/ai.html       /project/ai/            301
+/project/femboy.html   /project/femboy/        301
+/project/balatro.html  /project/balatro/       301
+
+# 旧 sitemap 由新的构建期端点接管
+# /sitemap.xml 由 Astro 静态生成，无需重写

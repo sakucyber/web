@@ -1,0 +1,489 @@
+---
+/**
+ * 项目页：AI贴吧老哥
+ * ----------------------------------------------------------------
+ * 用 ProjectLayout 统一头图 / 标题 / 作品 meta，Markdown 介绍来自
+ * src/content/works/ai-tieba.md。聊天工具嵌在正文区，不占满整屏；
+ * 交互逻辑全部在 src/scripts/ai-chat.ts。
+ */
+import ProjectLayout from '@/layouts/ProjectLayout.astro';
+import Icon from '@/components/Icon.astro';
+import { getWorkByHref } from '@/lib/content';
+
+const work = await getWorkByHref('/project/ai');
+if (!work) {
+  throw new Error('缺少作品元数据：src/content/works/ai-tieba.md 的 href 应为 /project/ai');
+}
+
+const postHref = '/posts/2026-08-30-ai-tieba';
+const RULES = [
+  { trigger: '含「！」', reply: '孝' },
+  { trigger: '含「尾号」', reply: '绷' },
+  { trigger: '长度 > 10', reply: '急' },
+  { trigger: '长度 ≤ 5', reply: '麻' },
+  { trigger: '其他情况', reply: '典' },
+];
+---
+
+<ProjectLayout work={work}>
+  <Fragment slot="actions">
+    <a class="btn" href="#chat"><Icon name="chevron-down" size={15} /> 去聊聊</a>
+  </Fragment>
+
+  <section class="chat-section" id="chat" aria-labelledby="chat-heading">
+    <div class="chat-card">
+      <header class="chat-head">
+        <div class="chat-head__avatar" aria-hidden="true">🤖</div>
+        <div class="chat-head__info">
+          <h2 id="chat-heading">AI贴吧老哥</h2>
+          <p><span class="chat-online" aria-hidden="true"></span>在线 · 典孝急绷麻</p>
+        </div>
+        <span class="chat-head__badge">纯前端 · 零 API</span>
+      </header>
+
+      <div class="chat-log" data-chat-log role="log" aria-live="polite" aria-label="聊天记录">
+        <div class="chat-empty" data-chat-empty>
+          <div class="chat-empty__icon" aria-hidden="true">💬</div>
+          <h3>和 AI 老哥聊聊</h3>
+          <p>
+            发送任意消息，老哥会用一个字回复你。<br />
+            关键词触发：「！」→ 孝 · 「尾号」→ 绷 · 长句 → 急 · 短句 → 麻
+          </p>
+        </div>
+      </div>
+
+      <form class="chat-form" data-chat-form>
+        <label class="visually-hidden" for="chat-input">输入消息</label>
+        <input
+          class="chat-input"
+          id="chat-input"
+          data-chat-input
+          type="text"
+          placeholder="输入内容 ..."
+          autocomplete="off"
+          enterkeyhint="send"
+          maxlength="200"
+        />
+        <button class="btn chat-send" type="submit">发送 ✨</button>
+      </form>
+    </div>
+
+    <aside class="chat-rules" aria-labelledby="rules-heading">
+      <h2 id="rules-heading">回复规则</h2>
+      <ul class="chat-rules__list">
+        {
+          RULES.map((rule) => (
+            <li>
+              <span class="pill">{rule.trigger}</span>
+              <Icon name="arrow-right" size={13} />
+              <span class="chat-rules__reply">{rule.reply}</span>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="chat-rules__note">按优先级从高到低匹配，所以「尾号！」永远先得到「孝」。</p>
+      <a class="back-link" href={postHref}>
+        看看它是怎么实现的 <Icon name="arrow-right" size={14} />
+      </a>
+    </aside>
+  </section>
+</ProjectLayout>
+
+<script>
+  import '@/scripts/ai-chat';
+</script>
+
+<style>
+  .chat-section {
+    display: grid;
+    gap: 20px;
+    max-width: var(--container-narrow);
+    margin-inline: auto;
+  }
+
+  /* ---------------- 聊天卡片 ---------------- */
+  .chat-card {
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+
+  .chat-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-elevated);
+  }
+
+  .chat-head__avatar {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    font-size: 1.35rem;
+    background: var(--gradient);
+    box-shadow: 0 0 22px var(--glow);
+  }
+
+  .chat-head__info {
+    min-width: 0;
+  }
+
+  .chat-head__info h2 {
+    font-family: var(--font-display);
+    font-size: 1.02rem;
+    line-height: 1.4;
+  }
+
+  .chat-head__info p {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 2px;
+    font-size: 0.74rem;
+    color: var(--text-tertiary);
+  }
+
+  .chat-online {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #6ee7b7;
+    box-shadow: 0 0 10px rgba(110, 231, 183, 0.8);
+  }
+
+  .chat-head__badge {
+    margin-left: auto;
+    padding: 4px 10px;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    background: var(--primary-bg);
+    color: var(--primary);
+    font-size: 0.66rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .chat-log {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    height: clamp(260px, 42vh, 380px);
+    padding: 18px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background: radial-gradient(circle at 18% 0%, var(--primary-bg), transparent 58%);
+  }
+
+  .chat-log::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .chat-log::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background: var(--border-strong);
+  }
+
+  /* ---------------- 空状态 ---------------- */
+  .chat-empty {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 18px 12px;
+    text-align: center;
+  }
+
+  .chat-empty[hidden] {
+    display: none;
+  }
+
+  .chat-empty__icon {
+    font-size: 2.4rem;
+    animation: chat-float 2.8s ease-in-out infinite;
+  }
+
+  .chat-empty h3 {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    color: var(--text);
+  }
+
+  .chat-empty p {
+    max-width: 340px;
+    font-size: 0.8rem;
+    line-height: 1.75;
+    color: var(--text-tertiary);
+  }
+
+  @keyframes chat-float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+
+  /* ---------------- 动态消息（TS 创建，需 :global） ---------------- */
+  .chat-log :global(.chat-message) {
+    display: flex;
+    gap: 10px;
+    max-width: 86%;
+    animation: chat-in 0.35s var(--ease-out-expo) both;
+  }
+
+  .chat-log :global(.chat-message--user) {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+  }
+
+  .chat-log :global(.chat-message--ai) {
+    align-self: flex-start;
+  }
+
+  .chat-log :global(.chat-avatar) {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    margin-top: 2px;
+    border-radius: 50%;
+    font-size: 0.85rem;
+  }
+
+  .chat-log :global(.chat-message--user .chat-avatar) {
+    background: var(--gradient);
+  }
+
+  .chat-log :global(.chat-message--ai .chat-avatar) {
+    background: var(--primary-bg);
+    border: 1px solid var(--border);
+  }
+
+  .chat-log :global(.chat-bubble-group) {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .chat-log :global(.chat-bubble) {
+    padding: 10px 15px;
+    border-radius: 16px;
+    font-size: 0.86rem;
+    line-height: 1.65;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .chat-log :global(.chat-message--user .chat-bubble) {
+    border-bottom-right-radius: 5px;
+    background: var(--gradient);
+    color: #fff;
+  }
+
+  .chat-log :global(.chat-message--ai .chat-bubble) {
+    border: 1px solid var(--border);
+    border-bottom-left-radius: 5px;
+    background: var(--bg-elevated);
+    color: var(--text);
+  }
+
+  .chat-log :global(.chat-time) {
+    font-size: 0.62rem;
+    color: var(--text-tertiary);
+    opacity: 0.8;
+  }
+
+  .chat-log :global(.chat-message--user .chat-time) {
+    text-align: right;
+  }
+
+  .chat-log :global(.chat-dots) {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 13px 16px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    border-bottom-left-radius: 5px;
+    background: var(--bg-elevated);
+  }
+
+  .chat-log :global(.chat-dots span) {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--primary);
+    animation: chat-typing 1.3s infinite both;
+  }
+
+  .chat-log :global(.chat-dots span:nth-child(2)) {
+    animation-delay: 0.18s;
+  }
+
+  .chat-log :global(.chat-dots span:nth-child(3)) {
+    animation-delay: 0.36s;
+  }
+
+  @keyframes chat-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px) scale(0.98);
+    }
+
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes chat-typing {
+    0%,
+    80%,
+    100% {
+      transform: scale(0.6);
+      opacity: 0.45;
+    }
+
+    40% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  /* ---------------- 输入区 ---------------- */
+  .chat-form {
+    display: flex;
+    gap: 10px;
+    padding: 14px 16px;
+    padding-bottom: calc(14px + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--border);
+    background: var(--bg-elevated);
+  }
+
+  .chat-input {
+    flex: 1;
+    min-width: 0;
+    padding: 11px 16px;
+    border: 1px solid var(--border-strong);
+    border-radius: 100px;
+    background: var(--bg);
+    color: var(--text);
+    font: inherit;
+    font-size: 0.86rem;
+    outline: none;
+    transition: border-color 0.3s var(--ease-out-quart);
+  }
+
+  .chat-input:focus {
+    border-color: var(--primary);
+  }
+
+  .chat-input::placeholder {
+    color: var(--text-tertiary);
+  }
+
+  .chat-send {
+    flex-shrink: 0;
+    padding-inline: 20px;
+  }
+
+  /* ---------------- 规则说明 ---------------- */
+  .chat-rules {
+    padding: 22px 24px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+  }
+
+  .chat-rules h2 {
+    margin-bottom: 12px;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+  }
+
+  .chat-rules__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 10px;
+    margin-bottom: 14px;
+    list-style: none;
+  }
+
+  .chat-rules__list li {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px 6px 6px;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    background: var(--bg-elevated);
+    color: var(--text-secondary);
+    font-size: 0.76rem;
+  }
+
+  .chat-rules__reply {
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: var(--primary);
+  }
+
+  .chat-rules__note {
+    margin-bottom: 16px;
+    font-size: 0.78rem;
+    line-height: 1.7;
+    color: var(--text-tertiary);
+  }
+
+  .chat-rules .back-link {
+    margin-top: 0;
+  }
+
+  /* ---------------- 响应式 ---------------- */
+  @media (max-width: 560px) {
+    .chat-head {
+      padding: 13px 14px;
+    }
+
+    .chat-head__badge {
+      display: none;
+    }
+
+    .chat-log {
+      height: clamp(240px, 48vh, 340px);
+      padding: 14px;
+    }
+
+    .chat-form {
+      padding: 12px;
+      padding-bottom: calc(12px + env(safe-area-inset-bottom));
+    }
+
+    .chat-input {
+      font-size: 1rem;
+    }
+
+    .chat-send {
+      padding-inline: 16px;
+    }
+
+    .chat-rules {
+      padding: 18px;
+    }
+  }
+</style>

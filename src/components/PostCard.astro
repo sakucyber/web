@@ -1,0 +1,82 @@
+---
+/** 文章卡片：首页最新文章 / 文章列表共用 */
+import { Image } from 'astro:assets';
+import type { Post } from '@/lib/content';
+import { getPostHref, getReadingTime } from '@/lib/content';
+import { formatDate, toISODate } from '@/lib/format';
+import { hasImage, imageByKey } from '@/lib/images';
+
+interface Props {
+  post: Post;
+  variant?: 'grid' | 'list';
+}
+
+const { post, variant = 'grid' } = Astro.props;
+const cover = hasImage(post.data.cover) ? imageByKey(post.data.cover) : undefined;
+const reading = getReadingTime(post.body);
+const href = getPostHref(post);
+---
+
+<a
+  class={`post-card post-card--${variant}`}
+  href={href}
+  aria-label={post.data.title}
+  data-search={`${post.data.title} ${post.data.description} ${post.data.category} ${post.data.tags.join(' ')}`}
+>
+  <div class="post-card__media">
+    {
+      cover && (
+        <Image
+          src={cover}
+          format="webp"
+          widths={[400, 800]}
+          sizes="(max-width: 640px) 100vw, 360px"
+          alt=""
+          loading="lazy"
+          decoding="async"
+          quality={76}
+        />
+      )
+    }
+  </div>
+
+  <div class="post-card__body">
+    <div class="post-card__meta">
+      <time datetime={toISODate(post.data.date)}>{formatDate(post.data.date, 'short')}</time>
+      <span>{post.data.category}</span>
+      <span>{reading.minutes} 分钟</span>
+    </div>
+    <h3 class="post-card__title">{post.data.title}</h3>
+    <p class="post-card__desc">{post.data.description}</p>
+    {
+      post.data.tags.length > 0 && (
+        <div class="post-card__tags">
+          {post.data.tags.slice(0, 4).map((tag) => (
+            <span class="pill">#{tag}</span>
+          ))}
+        </div>
+      )
+    }
+  </div>
+</a>
+
+<style>
+  .post-card__media:empty {
+    background: linear-gradient(135deg, var(--primary-bg), transparent 60%);
+  }
+
+  .post-card--list .post-card__body {
+    padding: 20px 24px;
+  }
+
+  @media (max-width: 860px) {
+    .post-card--list {
+      flex-direction: column;
+    }
+
+    .post-card--list .post-card__media {
+      flex: none;
+      aspect-ratio: 16 / 9;
+    }
+  }
+</style>

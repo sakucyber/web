@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+# 小玩具页不收录
+Disallow: /project/ai
+Disallow: /project/femboy
+# 站内搜索页无需收录
+Disallow: /search
+
+Sitemap: https://buling.qzz.io/sitemap.xml

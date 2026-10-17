@@ -1,0 +1,163 @@
+---
+/**
+ * 自定义 404
+ * ----------------------------------------------------------------
+ * Astro 静态输出会生成 dist/404.html，Cloudflare Pages 会自动把它作为 404 页面。
+ * 视觉沿用旧站：渐变 404 数字 + 光晕 + 回首页 / 画廊 / 搜索三个出口。
+ */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Icon from '@/components/Icon.astro';
+
+const QUICK_LINKS = [
+  { href: '/posts', label: '文章' },
+  { href: '/works', label: '作品' },
+  { href: '/project', label: '项目中心' },
+  { href: '/gallery', label: '画廊' },
+];
+---
+
+<BaseLayout
+  title="404 · 这个页面走丢了"
+  description="没有找到你要访问的页面。回到首页，或者搜索全站内容看看。"
+  noindex
+  bodyClass="page-404"
+>
+  <section class="notfound" aria-labelledby="notfound-title">
+    <div class="notfound__glow" aria-hidden="true"></div>
+
+    <div class="notfound__inner">
+      <p class="notfound__code" aria-hidden="true">404</p>
+      <h1 id="notfound-title">这个页面走丢了 🌸</h1>
+      <p class="notfound__desc">
+        你要找的内容可能被搬走了，或者链接打错了一个字。<br />
+        回首页看看吧，那里还在。
+      </p>
+
+      <div class="notfound__actions">
+        <a class="btn" href="/"><Icon name="home" size={15} /> 回到首页</a>
+        <a class="back-link" href="/gallery"><Icon name="palette" size={15} /> 逛逛画廊</a>
+        <a class="back-link" href="/search"><Icon name="search" size={15} /> 搜索全站</a>
+      </div>
+
+      <nav class="notfound__links" aria-label="常用页面">
+        <span>热门去处</span>
+        {QUICK_LINKS.map((link) => <a href={link.href}>{link.label}</a>)}
+      </nav>
+
+      <p class="notfound__hint">小提示：按 <kbd>/</kbd> 可以随时呼出搜索</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .notfound {
+    position: relative;
+    display: grid;
+    min-height: calc(100svh - var(--nav-h));
+    place-items: center;
+    padding: calc(var(--nav-h) + clamp(28px, 6vw, 64px)) clamp(16px, 4vw, 32px)
+      clamp(48px, 8vw, 96px);
+    overflow: hidden;
+  }
+
+  .notfound__glow {
+    position: absolute;
+    top: -18%;
+    right: -12%;
+    width: min(520px, 80vw);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--primary);
+    filter: blur(140px);
+    opacity: 0.16;
+    pointer-events: none;
+  }
+
+  .notfound__inner {
+    position: relative;
+    z-index: 1;
+    max-width: 560px;
+    text-align: center;
+  }
+
+  .notfound__code {
+    margin-bottom: 10px;
+    font-family: var(--font-display);
+    font-size: clamp(4.5rem, 20vw, 9rem);
+    line-height: 1;
+    background: var(--gradient);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  .notfound h1 {
+    margin-bottom: 14px;
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 4.5vw, 2rem);
+  }
+
+  .notfound__desc {
+    margin-bottom: 28px;
+    font-size: 0.92rem;
+    line-height: 1.9;
+    color: var(--text-secondary);
+  }
+
+  .notfound__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .notfound__links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px 18px;
+    margin-top: 32px;
+    font-size: 0.78rem;
+  }
+
+  .notfound__links span {
+    color: var(--text-tertiary);
+  }
+
+  .notfound__links a {
+    color: var(--text-secondary);
+  }
+
+  .notfound__links a:hover {
+    color: var(--primary);
+  }
+
+  .notfound__hint {
+    margin-top: 18px;
+    font-size: 0.74rem;
+    color: var(--text-tertiary);
+  }
+
+  .notfound__hint kbd {
+    padding: 2px 7px;
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    background: var(--bg-elevated);
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+  }
+
+  @media (max-width: 520px) {
+    .notfound__actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .notfound__actions :global(.btn),
+    .notfound__actions :global(.back-link) {
+      justify-content: center;
+    }
+  }
+</style>

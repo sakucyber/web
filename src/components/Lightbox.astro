@@ -1,0 +1,33 @@
+---
+/** 灯箱外壳：具体图片由 app.ts 从带 data-lightbox-* 的触发器读取 */
+import Icon from '@/components/Icon.astro';
+---
+
+<div
+  class="lightbox"
+  id="lightbox"
+  role="dialog"
+  aria-modal="true"
+  aria-label="图片查看器"
+  aria-hidden="true"
+>
+  <button class="lb-close" id="lbClose" type="button" aria-label="关闭灯箱">
+    <Icon name="close" size={20} />
+  </button>
+  <button class="lb-nav lb-prev" id="lbPrev" type="button" aria-label="上一张">
+    <Icon name="chevron-left" size={22} />
+  </button>
+  <img
+    class="lightbox-img"
+    id="lbImg"
+    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1' height='1'/%3E"
+    alt=""
+    width="1200"
+    height="800"
+  />
+  <button class="lb-nav lb-next" id="lbNext" type="button" aria-label="下一张">
+    <Icon name="chevron-right" size={22} />
+  </button>
+  <p class="lb-caption" id="lbCaption"></p>
+  <div class="lb-count" id="lbCount"></div>
+</div>
