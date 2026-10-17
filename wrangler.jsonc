@@ -1,0 +1,10 @@
+{
+  // wrangler 配置：仅供 `npx wrangler pages deploy` 命令行部署使用；
+  // Cloudflare Pages 的 Git 自动构建仍需在 Dashboard 里把
+  // Build command 设为 `npm run build`、Output directory 设为 `dist`。
+  // 如果你的 Pages 项目名不是 web，请把 name 改成实际项目名。
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "web",
+  "compatibility_date": "2026-10-01",
+  "pages_build_output_dir": "./dist",
+}

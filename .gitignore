@@ -1,4 +1,21 @@
+# 依赖与构建产物
 node_modules/
+dist/
+.astro/
+
+# 系统文件与日志
 .DS_Store
-# 图片优化脚本的原始文件备份（git 历史里本来就有）
+Thumbs.db
+*.log
+
+# 环境变量（本项目不需要，防止误提交）
+.env
+.env.*
+!.env.example
+
+# 图片优化脚本的原始文件备份（原图在 git 历史里）
+src/assets/images/_original/
 images/_original/
+
+# 本地预览产物
+.preview/

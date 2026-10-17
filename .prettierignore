@@ -1,0 +1,11 @@
+dist/
+node_modules/
+.astro/
+package-lock.json
+public/games/
+projects/balatro/
+src/assets/images/
+src/content/
+README.md
+MIGRATION.md
+docs/
