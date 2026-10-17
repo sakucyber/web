@@ -2,52 +2,44 @@
 <html lang="zh-CN" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🤖 AI贴吧老哥</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<script>try{var t=localStorage.getItem('blog-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<title>AI贴吧老哥 · buling 的个人小窝</title>
+<meta name="description" content="用 AI 模仿贴吧老哥的语气和你聊天，支持典孝急绷麻等多种回复风格。">
+<meta name="theme-color" content="#0a0a0f">
+<meta name="robots" content="noindex,follow">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Noto+Sans+SC:wght@300;400;500;700;900&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=ZCOOL+KuaiLe&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=ZCOOL+KuaiLe&display=swap"></noscript>
+<link rel="stylesheet" href="/assets/theme.css">
 <style>
-:root{--font-body:'Nunito','Noto Sans SC',-apple-system,sans-serif;--font-display:'ZCOOL KuaiLe','Noto Sans SC',cursive;--primary:#e879b0;--primary-light:#f5a8d0;--primary-bg:rgba(232,121,176,.1);--gradient:linear-gradient(135deg,#e879b0,#c084fc);--glow:rgba(232,121,176,.3);--bg:#0a0a0f;--bg-card:rgba(255,255,255,.04);--bg-nav:rgba(10,10,15,.7);--text:#f0eef5;--text-secondary:#a8a0b8;--text-tertiary:#6b6380;--border:rgba(255,255,255,.06);--shadow:0 4px 30px rgba(0,0,0,.4);--shadow-hover:0 12px 50px rgba(232,121,176,.15);--ease-out-expo:cubic-bezier(.16,1,.3,1);--ease-out-quart:cubic-bezier(.25,1,.5,1);--ease-spring:cubic-bezier(.175,.885,.32,1.275);--ai-bg:rgba(255,255,255,.05);--ai-border:rgba(255,255,255,.08);--input-bg:rgba(255,255,255,.06)}
-[data-theme="light"]{--bg:#fef6ff;--bg-card:rgba(255,255,255,.72);--bg-nav:rgba(254,246,255,.75);--text:#2d2b3e;--text-secondary:#8b7fa8;--text-tertiary:#b8aed0;--border:rgba(180,130,200,.12);--shadow:0 4px 24px rgba(180,130,200,.12);--shadow-hover:0 12px 50px rgba(232,121,176,.18);--ai-bg:rgba(255,255,255,.6);--ai-border:rgba(180,130,200,.15);--input-bg:rgba(255,255,255,.7)}
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html{overflow-x:hidden}
-body{font-family:var(--font-body);background:var(--bg);color:var(--text);height:100vh;overflow:hidden;transition:background .6s,color .6s;-webkit-font-smoothing:antialiased}
-a{color:var(--primary);text-decoration:none;transition:all .3s var(--ease-out-quart)}
-::selection{background:var(--primary);color:#fff}
+body{height:100vh;height:100dvh;overflow:hidden}
+[data-theme="light"] .navbar{background:rgba(254,246,255,.5)}
 
-.loading{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .8s var(--ease-out-expo),visibility .8s}
-.loading.done{opacity:0;visibility:hidden;pointer-events:none}
-.loading-ring{width:56px;height:56px;border:2px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin 1s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.loading span{margin-top:16px;font-family:var(--font-display);color:var(--text-secondary);font-size:.88rem}
-
-.cursor-dot,.cursor-ring{position:fixed;pointer-events:none;z-index:9998;border-radius:50%}
-.cursor-dot{width:8px;height:8px;background:var(--primary);transform:translate(-50%,-50%);transition:transform .1s}
-.cursor-ring{width:40px;height:40px;border:1.5px solid var(--primary);transform:translate(-50%,-50%);opacity:.5;transition:width .4s var(--ease-spring),height .4s var(--ease-spring)}
-.cursor-ring.hover{width:60px;height:60px;border-color:var(--primary-light);background:var(--primary-bg)}
-
-.particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
-.particle{position:absolute;border-radius:50%;opacity:0;animation:floatUp linear infinite}
-@keyframes floatUp{0%{transform:translateY(100vh) scale(0);opacity:0}10%{opacity:.5}90%{opacity:.5}100%{transform:translateY(-10vh) scale(1);opacity:0}}
-
-.chat-bg{position:fixed;inset:0;background:url('images/ec43126fgy1hp9e9b21ggj228e35pnpe.jpg') center/cover no-repeat;opacity:.22;z-index:0}
+.chat-bg{position:fixed;inset:0;background:#0a0a0f;opacity:.22;z-index:0;overflow:hidden}
+.chat-bg img{width:100%;height:100%;object-fit:cover}
 [data-theme="light"] .chat-bg{opacity:.1}
 
-.chat-container{position:relative;z-index:1;max-width:640px;width:100%;height:100vh;margin:0 auto;display:flex;flex-direction:column;background:rgba(255,255,255,.08);backdrop-filter:blur(30px) saturate(1.8);-webkit-backdrop-filter:blur(30px) saturate(1.8);border-left:1px solid rgba(255,255,255,.1);border-right:1px solid rgba(255,255,255,.1)}
+.chat-container{position:relative;z-index:1;max-width:640px;width:100%;height:100vh;height:100dvh;margin:0 auto;display:flex;flex-direction:column;background:rgba(255,255,255,.08);backdrop-filter:blur(30px) saturate(1.8);-webkit-backdrop-filter:blur(30px) saturate(1.8);border-left:1px solid rgba(255,255,255,.1);border-right:1px solid rgba(255,255,255,.1)}
 [data-theme="light"] .chat-container{background:rgba(255,255,255,.35);border-color:rgba(180,130,200,.1)}
 
 .chat-header{display:flex;justify-content:space-between;align-items:center;padding:16px 24px;background:rgba(255,255,255,.06);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0}
 [data-theme="light"] .chat-header{background:rgba(255,255,255,.3);border-color:rgba(180,130,200,.1)}
 .chat-title{display:flex;align-items:center;gap:12px}
 .chat-title .avatar{width:42px;height:42px;border-radius:50%;background:var(--gradient);display:grid;place-items:center;font-size:1.3rem;box-shadow:0 0 20px var(--glow)}
-.chat-title .info h3{font-family:var(--font-display);font-size:1rem;font-weight:700}
+.chat-title .info h1{font-family:var(--font-display);font-size:1rem;font-weight:700;line-height:1.4}
 .chat-title .info p{font-size:.72rem;color:var(--text-tertiary);margin-top:2px}
 .chat-actions{display:flex;gap:6px}
-.nav-btn{width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.08);color:var(--text-secondary);cursor:pointer;display:grid;place-items:center;font-size:.85rem;transition:all .35s var(--ease-spring);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.nav-btn{width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.08);color:var(--text-secondary);cursor:pointer;display:grid;place-items:center;font-size:.85rem;transition:background .35s var(--ease-spring),color .35s,border-color .35s,transform .35s var(--ease-spring);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
 [data-theme="light"] .nav-btn{background:rgba(255,255,255,.35);border-color:rgba(180,130,200,.12)}
 .nav-btn:hover{background:var(--primary-bg);color:var(--primary);border-color:var(--primary);transform:scale(1.1) rotate(20deg)}
 
-.chat-box{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:12px}
+.chat-box{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:12px;overscroll-behavior:contain}
 .chat-box::-webkit-scrollbar{width:4px}
 .chat-box::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
 
@@ -73,136 +65,140 @@ a{color:var(--primary);text-decoration:none;transition:all .3s var(--ease-out-qu
 .typing-dots span:nth-child(3){animation-delay:.4s}
 @keyframes typing{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}
 
-.input-area{display:flex;gap:10px;padding:16px 20px;background:rgba(255,255,255,.06);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(255,255,255,.08);flex-shrink:0}
+.input-area{display:flex;gap:10px;padding:16px 20px;background:rgba(255,255,255,.06);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(255,255,255,.08);flex-shrink:0;padding-bottom:calc(16px + env(safe-area-inset-bottom))}
 [data-theme="light"] .input-area{background:rgba(255,255,255,.3);border-color:rgba(180,130,200,.1)}
-.input-area input{flex:1;padding:12px 18px;border-radius:100px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.06);color:var(--text);font-size:.88rem;font-family:var(--font-body);outline:none;transition:border-color .3s var(--ease-out-quart);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.input-area input{flex:1;min-width:0;padding:12px 18px;border-radius:100px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.06);color:var(--text);font-size:.88rem;font-family:var(--font-body);outline:none;transition:border-color .3s var(--ease-out-quart);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 [data-theme="light"] .input-area input{background:rgba(255,255,255,.45);border-color:rgba(180,130,200,.12)}
 .input-area input:focus{border-color:var(--primary)}
 .input-area input::placeholder{color:var(--text-tertiary)}
-.input-area button{padding:12px 22px;border-radius:100px;border:none;background:var(--gradient);color:#fff;font-size:.88rem;cursor:pointer;font-family:var(--font-body);font-weight:700;transition:all .35s var(--ease-spring);white-space:nowrap}
+.input-area button{padding:12px 22px;border-radius:100px;border:none;background:var(--gradient);color:#fff;font-size:.88rem;cursor:pointer;font-family:var(--font-body);font-weight:700;transition:transform .35s var(--ease-spring),box-shadow .35s;white-space:nowrap}
 .input-area button:hover{transform:scale(1.05);box-shadow:0 4px 16px var(--glow)}
 
 .empty-state{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--text-tertiary);gap:12px;padding:40px}
 .empty-state .icon{font-size:3rem;animation:bounce 2s ease infinite}
 @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
-.empty-state h3{font-family:var(--font-display);color:var(--text-secondary);font-size:1.1rem}
+.empty-state h2{font-family:var(--font-display);color:var(--text-secondary);font-size:1.1rem;font-weight:700}
 .empty-state p{font-size:.82rem;text-align:center;max-width:280px;line-height:1.6}
 
-@media(max-width:640px){.chat-container{border:none}.message{max-width:88%}.input-area{padding:12px 14px}.chat-header{padding:12px 14px}.chat-box{padding:14px}.cursor-dot,.cursor-ring{display:none!important}}
+@media(max-width:640px){
+  .chat-container{border:none}
+  .message{max-width:88%}
+  .input-area{padding:12px 14px;padding-bottom:calc(12px + env(safe-area-inset-bottom))}
+  .chat-header{padding:12px 14px}
+  .chat-box{padding:14px}
+}
 </style>
 </head>
 <body>
 
 <div class="loading" id="loading"><div class="loading-ring"></div><span>✨ 加载中...</span></div>
-<div class="cursor-dot" id="cursorDot"></div>
-<div class="cursor-ring" id="cursorRing"></div>
-<div class="particles" id="particles"></div>
-<div class="chat-bg"></div>
+<div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+<div class="particles" id="particles" data-particles="10" aria-hidden="true"></div>
+<div class="chat-bg" aria-hidden="true"><img src="/images/ec43126fgy1hp9e9b21ggj228e35pnpe.jpg" alt="" loading="lazy" decoding="async"></div>
 
 <div class="chat-container">
-  <div class="chat-header">
+  <header class="chat-header">
     <div class="chat-title">
-      <div class="avatar">🤖</div>
+      <div class="avatar" aria-hidden="true">🤖</div>
       <div class="info">
-        <h3>AI贴吧老哥</h3>
+        <h1>AI贴吧老哥</h1>
         <p>🟢 在线 · 典孝急绷麻</p>
       </div>
     </div>
     <div class="chat-actions">
-      <a href="/" class="nav-btn" title="返回首页"><i class="fas fa-home"></i></a>
-      <button class="nav-btn" id="themeToggle" title="切换主题"><i class="fas fa-moon"></i></button>
+      <a href="/" class="nav-btn" title="返回首页" aria-label="返回首页"><i class="fas fa-home" aria-hidden="true"></i></a>
+      <button class="nav-btn" id="themeToggle" type="button" aria-label="切换深色/浅色主题"><i class="fas fa-moon" aria-hidden="true"></i></button>
     </div>
-  </div>
+  </header>
 
-  <div class="chat-box" id="chatBox">
+  <div class="chat-box" id="chatBox" role="log" aria-live="polite" aria-label="聊天记录">
     <div class="empty-state" id="emptyState">
-      <div class="icon">💬</div>
-      <h3>和 AI 老哥聊聊</h3>
+      <div class="icon" aria-hidden="true">💬</div>
+      <h2>和 AI 老哥聊聊</h2>
       <p>发送任意消息，AI 会用贴吧经典语录回复你 🤣<br>关键词触发：「！」→孝 / 「尾号」→绷 / 长句→急 / 短句→麻</p>
     </div>
   </div>
 
   <div class="input-area">
-    <input type="text" id="userInput" placeholder="输入内容 ..." autofocus>
-    <button onclick="sendMessage()">发送 ✨</button>
+    <label class="visually-hidden" for="userInput">输入消息</label>
+    <input type="text" id="userInput" placeholder="输入内容 ..." autocomplete="off" enterkeyhint="send">
+    <button type="button" id="sendBtn">发送 ✨</button>
   </div>
 </div>
 
+<script src="/assets/theme.js" defer></script>
 <script>
 (function(){
-  const $=s=>document.querySelector(s),$$=s=>document.querySelectorAll(s);
-  window.addEventListener('load',()=>setTimeout(()=>$('#loading').classList.add('done'),500));
-  const themeToggle=$('#themeToggle'),themeIcon=themeToggle.querySelector('i');
-  function setTheme(t){document.documentElement.setAttribute('data-theme',t);localStorage.setItem('blog-theme',t);themeIcon.className=t==='dark'?'fas fa-moon':'fas fa-sun'}
-  setTheme(localStorage.getItem('blog-theme')||'dark');
-  themeToggle.addEventListener('click',()=>setTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark'));
-  const dot=$('#cursorDot'),ring=$('#cursorRing');let mx=0,my=0,rx=0,ry=0;
-  if(!matchMedia('(pointer:coarse)').matches){
-    document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px'});
-    !function a(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(a)}();
-    $$('button,a,input').forEach(el=>{el.addEventListener('mouseenter',()=>ring.classList.add('hover'));el.addEventListener('mouseleave',()=>ring.classList.remove('hover'))});
+  var chatBox = document.getElementById('chatBox');
+  var emptyState = document.getElementById('emptyState');
+  var userInput = document.getElementById('userInput');
+  var sendBtn = document.getElementById('sendBtn');
+  var typingEl = null;
+
+  function addMessage(text, isUser){
+    if (emptyState) { emptyState.style.display = 'none'; }
+    var msg = document.createElement('div');
+    msg.className = 'message ' + (isUser ? 'user-message' : 'ai-message');
+
+    var avatar = document.createElement('div');
+    avatar.className = 'msg-avatar';
+    avatar.setAttribute('aria-hidden', 'true');
+    avatar.textContent = isUser ? '🧑' : '🤖';
+
+    var wrap = document.createElement('div');
+    wrap.style.maxWidth = 'calc(100% - 44px)';
+
+    var bubble = document.createElement('div');
+    bubble.className = 'msg-bubble';
+    bubble.textContent = text;
+
+    var time = document.createElement('div');
+    time.className = 'msg-time';
+    var d = new Date();
+    time.textContent = String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+
+    wrap.appendChild(bubble);
+    wrap.appendChild(time);
+    msg.appendChild(avatar);
+    msg.appendChild(wrap);
+    chatBox.appendChild(msg);
+    chatBox.scrollTop = chatBox.scrollHeight;
   }
-  const pColors=['#e879b0','#c084fc','#f5a8d0','#60a5fa','#fbbf24','#6ee7b7'];
-  for(let i=0;i<10;i++){const p=document.createElement('div');p.className='particle';const sz=Math.random()*4+2;p.style.cssText='width:'+sz+'px;height:'+sz+'px;left:'+Math.random()*100+'vw;background:'+pColors[~~(Math.random()*pColors.length)]+';animation-duration:'+(Math.random()*14+10)+'s;animation-delay:'+(Math.random()*12)+'s';$('#particles').appendChild(p)}
+
+  function showTyping(){
+    var div = document.createElement('div');
+    div.className = 'message ai-message typing-indicator';
+    div.setAttribute('aria-hidden', 'true');
+    div.innerHTML = '<div class="msg-avatar">🤖</div><div class="typing-dots"><span></span><span></span><span></span></div>';
+    chatBox.appendChild(div);
+    chatBox.scrollTop = chatBox.scrollHeight;
+    typingEl = div;
+  }
+  function hideTyping(){ if (typingEl) { typingEl.remove(); typingEl = null; } }
+
+  function sendMessage(){
+    var msg = userInput.value.trim();
+    if (!msg) return;
+    addMessage(msg, true);
+    userInput.value = '';
+    showTyping();
+    setTimeout(function(){
+      var res = '典';
+      if (msg.indexOf('！') > -1) res = '孝';
+      else if (msg.indexOf('尾号') > -1) res = '绷';
+      else if (msg.length > 10) res = '急';
+      else if (msg.length <= 5) res = '麻';
+      hideTyping();
+      addMessage(res, false);
+    }, 600 + Math.random() * 400);
+  }
+
+  sendBtn.addEventListener('click', sendMessage);
+  userInput.addEventListener('keydown', function(e){
+    if (e.key === 'Enter') { e.preventDefault(); sendMessage(); }
+  });
 })();
-
-const chatBox=document.getElementById('chatBox');
-const emptyState=document.getElementById('emptyState');
-const userInput=document.getElementById('userInput');
-let typingEl=null;
-
-function addMessage(text,isUser){
-  emptyState.style.display='none';
-  const msg=document.createElement('div');
-  msg.className='message '+(isUser?'user-message':'ai-message');
-  const avatar=document.createElement('div');
-  avatar.className='msg-avatar';
-  avatar.textContent=isUser?'🧑':'🤖';
-  const bubbleWrap=document.createElement('div');
-  bubbleWrap.style.maxWidth='calc(100% - 44px)';
-  const bubble=document.createElement('div');
-  bubble.className='msg-bubble';
-  bubble.textContent=text;
-  const time=document.createElement('div');
-  time.className='msg-time';
-  time.textContent=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-  bubbleWrap.appendChild(bubble);
-  bubbleWrap.appendChild(time);
-  msg.appendChild(avatar);
-  msg.appendChild(bubbleWrap);
-  chatBox.appendChild(msg);
-  chatBox.scrollTop=chatBox.scrollHeight;
-}
-
-function showTyping(){
-  const div=document.createElement('div');
-  div.className='message ai-message typing-indicator';
-  div.innerHTML='<div class="msg-avatar">🤖</div><div class="typing-dots"><span></span><span></span><span></span></div>';
-  chatBox.appendChild(div);
-  chatBox.scrollTop=chatBox.scrollHeight;
-  typingEl=div;
-}
-
-function hideTyping(){if(typingEl){typingEl.remove();typingEl=null}}
-
-function sendMessage(){
-  const msg=userInput.value.trim();
-  if(!msg)return;
-  addMessage(msg,true);
-  userInput.value='';
-  showTyping();
-  setTimeout(()=>{
-    let res='典';
-    if(msg.includes('！'))res='孝';
-    else if(msg.includes('尾号'))res='绷';
-    else if(msg.length>10)res='急';
-    else if(msg.length<=5)res='麻';
-    hideTyping();
-    addMessage(res,false);
-  },600+Math.random()*400);
-}
-
-userInput.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();sendMessage()}});
 </script>
 </body>
 </html>

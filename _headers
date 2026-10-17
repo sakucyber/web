@@ -1,0 +1,25 @@
+# Cloudflare Pages 响应头配置
+# 文档：https://developers.cloudflare.com/pages/configuration/headers/
+
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), microphone=(), camera=(), interest-cohort=()
+
+# HTML 每次都回源校验，保证改完立刻生效
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+# 共用样式与脚本：文件名没带哈希，先给一天缓存。
+# 改完想让老访客立刻拿到新文件，把引用改成 /assets/theme.css?v=2 即可。
+/assets/*
+  Cache-Control: public, max-age=86400
+
+# 图片不常变，缓存久一点
+/images/*
+  Cache-Control: public, max-age=604800
+
+# 小文件
+/robots.txt
+  Cache-Control: public, max-age=3600

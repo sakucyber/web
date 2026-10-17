@@ -2,14 +2,23 @@
 <html lang="zh-CN" data-theme="light" data-color="sakura">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🌸 年度男娘程度总结器</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<script>/* 首屏前应用主题与配色，避免刷新时闪一下默认色 */try{var t=localStorage.getItem('blog-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');var c=localStorage.getItem('blog-color')||'sakura';document.documentElement.setAttribute('data-theme',t);document.documentElement.setAttribute('data-color',c)}catch(e){}</script>
+<title>年度男娘程度总结器 · buling 的小玩具</title>
+<meta name="description" content="输入昵称，测测你的男娘指数。基于哈希算法的趣味测试，相同昵称永远得到相同结果。">
+<meta name="theme-color" content="#fef6ff">
+<meta name="robots" content="noindex,follow">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Noto+Sans+SC:wght@300;400;500;700&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=ZCOOL+KuaiLe&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=ZCOOL+KuaiLe&display=swap"></noscript>
 <style>
 :root {
-  --font-body: 'Nunito', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-display: 'ZCOOL KuaiLe', 'Noto Sans SC', cursive;
+  --font-body: system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', 'Nunito', sans-serif;
+  --font-display: 'ZCOOL KuaiLe', 'PingFang SC', 'Microsoft YaHei', cursive;
   --radius-sm: 12px;
   --radius-md: 18px;
   --radius-lg: 24px;
@@ -34,12 +43,12 @@
   --shadow: 0 4px 24px rgba(0,0,0,.3);
   --shadow-hover: 0 8px 40px rgba(0,0,0,.4);
 }
-[data-color="sakura"]{--primary:#e879b0;--primary-light:#f5a8d0;--primary-bg:rgba(232,121,176,.1);--gradient:linear-gradient(135deg,#e879b0,#c084fc)}
-[data-color="azur"]{--primary:#60a5fa;--primary-light:#93c5fd;--primary-bg:rgba(96,165,250,.1);--gradient:linear-gradient(135deg,#60a5fa,#a78bfa)}
-[data-color="wisteria"]{--primary:#a78bfa;--primary-light:#c4b5fd;--primary-bg:rgba(167,139,250,.1);--gradient:linear-gradient(135deg,#a78bfa,#e879b0)}
-[data-color="matcha"]{--primary:#6ee7b7;--primary-light:#a7f3d0;--primary-bg:rgba(110,231,183,.1);--gradient:linear-gradient(135deg,#6ee7b7,#60a5fa)}
-[data-color="yuzu"]{--primary:#fbbf24;--primary-light:#fde68a;--primary-bg:rgba(251,191,36,.1);--gradient:linear-gradient(135deg,#fbbf24,#fb923c)}
-[data-color="sumi"]{--primary:#f472b6;--primary-light:#f9a8d4;--primary-bg:rgba(244,114,182,.1);--gradient:linear-gradient(135deg,#f472b6,#60a5fa)}
+[data-color="sakura"]{--primary:#e879b0;--primary-light:#f5a8d0;--primary-bg:rgba(232,121,176,.1);--gradient:linear-gradient(135deg,#e879b0,#c084fc);--glow:rgba(232,121,176,.35)}
+[data-color="azur"]{--primary:#60a5fa;--primary-light:#93c5fd;--primary-bg:rgba(96,165,250,.1);--gradient:linear-gradient(135deg,#60a5fa,#a78bfa);--glow:rgba(96,165,250,.35)}
+[data-color="wisteria"]{--primary:#a78bfa;--primary-light:#c4b5fd;--primary-bg:rgba(167,139,250,.1);--gradient:linear-gradient(135deg,#a78bfa,#e879b0);--glow:rgba(167,139,250,.35)}
+[data-color="matcha"]{--primary:#6ee7b7;--primary-light:#a7f3d0;--primary-bg:rgba(110,231,183,.1);--gradient:linear-gradient(135deg,#6ee7b7,#60a5fa);--glow:rgba(110,231,183,.35)}
+[data-color="yuzu"]{--primary:#fbbf24;--primary-light:#fde68a;--primary-bg:rgba(251,191,36,.1);--gradient:linear-gradient(135deg,#fbbf24,#fb923c);--glow:rgba(251,191,36,.35)}
+[data-color="sumi"]{--primary:#f472b6;--primary-light:#f9a8d4;--primary-bg:rgba(244,114,182,.1);--gradient:linear-gradient(135deg,#f472b6,#60a5fa);--glow:rgba(244,114,182,.35)}
 
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 body{
@@ -47,43 +56,38 @@ body{
   min-height:100vh;display:flex;flex-direction:column;align-items:center;
   justify-content:center;padding:20px;
   transition:background var(--transition),color var(--transition);
-  position:relative;overflow:hidden
+  position:relative;overflow:hidden;
+  -webkit-font-smoothing:antialiased;
 }
 body::before{
   content:'';position:fixed;inset:0;z-index:0;
-  background:url('../images/ec43126fgy1h01vz2f3paj21jk1zhu0y.jpg') center/cover no-repeat;
+  background:url('/images/ec43126fgy1h01vz2f3paj21jk1zhu0y.jpg') center/cover no-repeat;
   opacity:.18;transition:opacity .6s
 }
 [data-theme="dark"] body::before{opacity:.12}
 ::selection{background:var(--primary);color:#fff}
+:focus-visible{outline:2px solid var(--primary);outline-offset:3px;border-radius:6px}
+.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 
 .bg-orbs{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
-.bg-orbs .orb{position:absolute;border-radius:50%;filter:blur(100px);animation:orbFloat 25s ease-in-out infinite}
+.bg-orbs .orb{position:absolute;border-radius:50%;filter:blur(100px);animation:orbFloat 25s ease-in-out infinite;will-change:transform}
 .bg-orbs .orb:nth-child(1){width:500px;height:500px;background:var(--primary);top:-20%;left:-10%;opacity:.15}
 .bg-orbs .orb:nth-child(2){width:400px;height:400px;background:var(--primary-light);bottom:-15%;right:-8%;opacity:.1;animation-delay:-8s}
 @keyframes orbFloat{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(40px,-50px) scale(1.06)}66%{transform:translate(-30px,30px) scale(.94)}}
 
-.theme-btn{
-  position:fixed;top:20px;right:20px;z-index:100;
+.theme-btn,.color-btn{
+  position:fixed;top:20px;z-index:100;
   width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.18);
   background:rgba(255,255,255,.12);color:var(--text-secondary);
   cursor:pointer;display:grid;place-items:center;font-size:1rem;
   transition:all var(--bounce);backdrop-filter:blur(16px) saturate(1.4);
   -webkit-backdrop-filter:blur(16px) saturate(1.4)
 }
-[data-theme="dark"] .theme-btn{background:rgba(26,22,37,.5);border-color:rgba(255,255,255,.08)}
-.theme-btn:hover{background:var(--primary-bg);color:var(--primary);border-color:var(--primary);transform:scale(1.08)}
+.theme-btn{right:20px}
+.color-btn{right:72px}
+[data-theme="dark"] .theme-btn,[data-theme="dark"] .color-btn{background:rgba(26,22,37,.5);border-color:rgba(255,255,255,.08)}
+.theme-btn:hover,.color-btn:hover{background:var(--primary-bg);color:var(--primary);border-color:var(--primary);transform:scale(1.08)}
 
-.color-btn{
-  position:fixed;top:20px;right:72px;z-index:100;
-  width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.18);
-  background:rgba(255,255,255,.12);color:var(--text-secondary);
-  cursor:pointer;display:grid;place-items:center;font-size:1rem;
-  transition:all var(--bounce);backdrop-filter:blur(16px) saturate(1.4);
-  -webkit-backdrop-filter:blur(16px) saturate(1.4)
-}
-[data-theme="dark"] .color-btn{background:rgba(26,22,37,.5);border-color:rgba(255,255,255,.08)}
-.color-btn:hover{background:var(--primary-bg);color:var(--primary);border-color:var(--primary);transform:scale(1.08)}
 .color-picker-wrapper{position:fixed;top:20px;right:72px;z-index:100}
 .color-picker-popover{
   position:absolute;top:calc(100% + 10px);right:0;
@@ -117,10 +121,7 @@ body::before{
 }
 @keyframes fadeUp{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:translateY(0)}}
 
-h1{
-  font-family:var(--font-display);font-size:1.5rem;
-  margin-bottom:8px;color:var(--primary);
-}
+h1{font-family:var(--font-display);font-size:1.5rem;margin-bottom:8px;color:var(--primary);line-height:1.5}
 .tip{font-size:.82rem;color:var(--text-secondary);margin-bottom:24px}
 
 input{
@@ -159,97 +160,115 @@ button.btn-main:hover{transform:translateY(-2px);box-shadow:0 8px 24px var(--glo
   .container{padding:28px 20px}
   h1{font-size:1.2rem}
 }
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
 </style>
 </head>
 <body>
 
-<div class="bg-orbs"><div class="orb"></div><div class="orb"></div></div>
+<div class="bg-orbs" aria-hidden="true"><div class="orb"></div><div class="orb"></div></div>
 
 <div class="color-picker-wrapper">
-  <button class="color-btn" id="colorBtn"><i class="fas fa-palette"></i></button>
-  <div class="color-picker-popover" id="colorPopover">
+  <button class="color-btn" id="colorBtn" type="button" aria-label="选择主题色" aria-expanded="false" aria-controls="colorPopover"><i class="fas fa-palette" aria-hidden="true"></i></button>
+  <div class="color-picker-popover" id="colorPopover" role="group" aria-label="主题色">
     <p>🎨 主题色</p>
     <div class="color-grid">
-      <button class="color-opt active" data-color="sakura" style="background:#e879b0"></button>
-      <button class="color-opt" data-color="azur" style="background:#60a5fa"></button>
-      <button class="color-opt" data-color="wisteria" style="background:#a78bfa"></button>
-      <button class="color-opt" data-color="matcha" style="background:#6ee7b7"></button>
-      <button class="color-opt" data-color="yuzu" style="background:#fbbf24"></button>
-      <button class="color-opt" data-color="sumi" style="background:#f472b6"></button>
+      <button class="color-opt active" type="button" data-color="sakura" style="background:#e879b0" aria-label="樱花粉"></button>
+      <button class="color-opt" type="button" data-color="azur" style="background:#60a5fa" aria-label="天空蓝"></button>
+      <button class="color-opt" type="button" data-color="wisteria" style="background:#a78bfa" aria-label="紫藤"></button>
+      <button class="color-opt" type="button" data-color="matcha" style="background:#6ee7b7" aria-label="抹茶"></button>
+      <button class="color-opt" type="button" data-color="yuzu" style="background:#fbbf24" aria-label="柚子"></button>
+      <button class="color-opt" type="button" data-color="sumi" style="background:#f472b6" aria-label="墨染"></button>
     </div>
   </div>
 </div>
-<button class="theme-btn" id="themeToggle"><i class="fas fa-moon"></i></button>
+<button class="theme-btn" id="themeToggle" type="button" aria-label="切换深色/浅色主题"><i class="fas fa-moon" aria-hidden="true"></i></button>
 
-<div class="container">
+<main class="container">
   <h1>🌸 年度男娘程度总结器 🌸</h1>
   <p class="tip">输入你的昵称，测测你的男娘指数吧!</p>
 
-  <input type="text" id="nickname" placeholder="请输入你的昵称">
+  <label class="visually-hidden" for="nickname">你的昵称</label>
+  <input type="text" id="nickname" placeholder="请输入你的昵称" autocomplete="off">
 
-  <button class="btn-main" onclick="generateReport()">✨ 开始测试</button>
+  <button class="btn-main" id="runBtn" type="button">✨ 开始测试</button>
   <p class="tip">💡 相同的昵称会得到相同的结果哦</p>
 
-  <div class="result" id="result">
+  <div class="result" id="result" role="status" aria-live="polite">
     <h2>📝 专属男娘程度报告</h2>
     <p>昵称：<span id="result-nickname"></span></p>
     <p>男娘指数：<span class="score" id="score"></span>分</p>
     <div class="comment" id="comment"></div>
   </div>
-</div>
+</main>
 
-<div class="footer">© 2025 buling · 仅供娱乐</div>
+<footer class="footer">© 2025 buling · 仅供娱乐</footer>
 
 <script>
 (function(){
-  const html = document.documentElement;
+  var html = document.documentElement;
 
-  const themeToggle = document.getElementById('themeToggle');
-  const themeIcon = themeToggle.querySelector('i');
+  var themeToggle = document.getElementById('themeToggle');
+  var themeIcon = themeToggle.querySelector('i');
   function setTheme(t){
-    html.setAttribute('data-theme',t);
-    localStorage.setItem('blog-theme',t);
-    themeIcon.className=t==='dark'?'fas fa-sun':'fas fa-moon';
+    html.setAttribute('data-theme', t);
+    localStorage.setItem('blog-theme', t);
+    themeIcon.className = t === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
   }
 
-  const colorBtn = document.getElementById('colorBtn');
-  const colorPopover = document.getElementById('colorPopover');
-  const colorOpts = document.querySelectorAll('.color-opt');
+  var colorBtn = document.getElementById('colorBtn');
+  var popover = document.getElementById('colorPopover');
+  var colorOpts = document.querySelectorAll('.color-opt');
   function setColor(c){
-    html.setAttribute('data-color',c);
-    localStorage.setItem('blog-color',c);
-    colorOpts.forEach(o=>o.classList.toggle('active',o.dataset.color===c));
+    html.setAttribute('data-color', c);
+    localStorage.setItem('blog-color', c);
+    colorOpts.forEach(function(o){ o.classList.toggle('active', o.dataset.color === c); });
   }
-  colorBtn.addEventListener('click',e=>{e.stopPropagation();colorPopover.classList.toggle('open')});
-  document.addEventListener('click',()=>colorPopover.classList.remove('open'));
-  colorPopover.addEventListener('click',e=>e.stopPropagation());
-  colorOpts.forEach(b=>b.addEventListener('click',()=>setColor(b.dataset.color)));
+  colorBtn.addEventListener('click', function(e){
+    e.stopPropagation();
+    var open = popover.classList.toggle('open');
+    colorBtn.setAttribute('aria-expanded', String(open));
+  });
+  document.addEventListener('click', function(){
+    popover.classList.remove('open');
+    colorBtn.setAttribute('aria-expanded', 'false');
+  });
+  popover.addEventListener('click', function(e){ e.stopPropagation(); });
+  colorOpts.forEach(function(b){ b.addEventListener('click', function(){ setColor(b.dataset.color); }); });
 
-  const savedTheme = localStorage.getItem('blog-theme')||
-    (window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
-  const savedColor = localStorage.getItem('blog-color')||'sakura';
-  setTheme(savedTheme);setColor(savedColor);
-  themeToggle.addEventListener('click',()=>setTheme(html.getAttribute('data-theme')==='dark'?'light':'dark'));
+  // 主题与配色已由 <head> 内联脚本应用，这里只同步按钮图标
+  setTheme(html.getAttribute('data-theme') || 'light');
+  setColor(html.getAttribute('data-color') || 'sakura');
+  themeToggle.addEventListener('click', function(){
+    setTheme(html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+  });
 })();
 
-function stringToHash(str){let h=5381;for(let i=0;i<str.length;i++)h=(h<<5)+h+str.charCodeAt(i);return Math.abs(h)}
-function seededRandom(s){const x=Math.sin(s)*10000;return x-Math.floor(x)}
+var nicknameEl = document.getElementById('nickname');
+var resultEl = document.getElementById('result');
+
+function stringToHash(str){ var h = 5381; for (var i = 0; i < str.length; i++) h = (h << 5) + h + str.charCodeAt(i); return Math.abs(h); }
+function seededRandom(s){ var x = Math.sin(s) * 10000; return x - Math.floor(x); }
+
 function generateReport(){
-  const n=document.getElementById('nickname').value.trim();
-  if(!n){alert('请输入你的昵称哦~');return}
-  const h=stringToHash(n),s=Math.floor(seededRandom(h)*100)+1;
-  let c='';
-  if(s>=90)c='天呐！你是顶级天赋型男娘！骨子里的温柔可爱藏都藏不住，一举一动都戳中萌点，是圈子里公认的天花板级别的存在，男娘程度直接拉满！'
-  else if(s>=70)c='恭喜你！是资深男娘一枚~ 已经完全掌握了可爱的精髓，不管是穿搭还是言行都超有心得，妥妥的男娘界熟练工，可爱值持续在线！'
-  else if(s>=50)c='哇！你是潜力股男娘！已经有了不错的男娘天赋，稍微打磨一下就能解锁超多可爱属性，未来可期，赶紧把可爱技能点满吧！'
-  else if(s>=30)c='入门级男娘选手~ 已经有了可爱的苗头，只是还没完全放开自己，多尝试多探索，很快就能解锁属于你的可爱风格啦！'
-  else c='哈哈，你是直男本男没错了！可爱属性几乎为0，浑身散发着钢铁直男的气息，和男娘完全不沾边，主打一个阳刚正气！'
-  document.getElementById('result-nickname').textContent=n;
-  document.getElementById('score').textContent=s;
-  document.getElementById('comment').textContent=c;
-  document.getElementById('result').classList.add('show');
+  var n = nicknameEl.value.trim();
+  if (!n) { nicknameEl.focus(); alert('请输入你的昵称哦~'); return; }
+  var h = stringToHash(n), s = Math.floor(seededRandom(h) * 100) + 1, c = '';
+  if (s >= 90) c = '天呐！你是顶级天赋型男娘！骨子里的温柔可爱藏都藏不住，一举一动都戳中萌点，是圈子里公认的天花板级别的存在，男娘程度直接拉满！';
+  else if (s >= 70) c = '恭喜你！是资深男娘一枚~ 已经完全掌握了可爱的精髓，不管是穿搭还是言行都超有心得，妥妥的男娘界熟练工，可爱值持续在线！';
+  else if (s >= 50) c = '哇！你是潜力股男娘！已经有了不错的男娘天赋，稍微打磨一下就能解锁超多可爱属性，未来可期，赶紧把可爱技能点满吧！';
+  else if (s >= 30) c = '入门级男娘选手~ 已经有了可爱的苗头，只是还没完全放开自己，多尝试多探索，很快就能解锁属于你的可爱风格啦！';
+  else c = '哈哈，你是直男本男没错了！可爱属性几乎为0，浑身散发着钢铁直男的气息，和男娘完全不沾边，主打一个阳刚正气！';
+  document.getElementById('result-nickname').textContent = n;
+  document.getElementById('score').textContent = s;
+  document.getElementById('comment').textContent = c;
+  resultEl.classList.add('show');
+  resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
-document.getElementById('nickname').addEventListener('keydown',function(e){if(e.key==='Enter')generateReport()});
+
+document.getElementById('runBtn').addEventListener('click', generateReport);
+nicknameEl.addEventListener('keydown', function(e){ if (e.key === 'Enter') generateReport(); });
 </script>
 </body>
 </html>

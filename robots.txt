@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /project/ai.html
+Disallow: /project/femboy.html
+
+Sitemap: https://buling.qzz.io/sitemap.xml

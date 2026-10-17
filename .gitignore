@@ -1,1 +1,4 @@
 node_modules/
+.DS_Store
+# 图片优化脚本的原始文件备份（git 历史里本来就有）
+images/_original/
